@@ -1,0 +1,9 @@
+# Python
+**/__pycache__/
+
+# SQLite
+**/*.sqlite3
+
+# Editors and tools
+**/.mypy_cache/
+**/.vscode/
