@@ -5,5 +5,3 @@ services:
     restart: always
   proxy:
     restart: always
-  db:
-    restart: always
