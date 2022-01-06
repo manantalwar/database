@@ -64,6 +64,7 @@ class Loan(models.Model):
             #self starts before another loan ends
             if self.loan_start > loans.start and self.loan_start < loans.loan_return:
                 return False
+        self.add_loan()
         return True
                 
 
