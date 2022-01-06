@@ -33,34 +33,66 @@ class TutoringShiftChangeRequest(TutoringShift):
     approved_by = models.ForeignKey(to=LRCDatabaseUser, null=True, default=None, on_delete=models.CASCADE, help_text='The user (if any) who approved the change request.')
     approved_on = models.DateTimeField(help_text='When the request was approved.')
 
-
+   
 class Hardware(models.Model):
 
     name = models.CharField(max_length=200)
-    isAvailable = models.BooleanField(True)
-
-    #inventory = models.ForeignKey('Inventory', on_delete=CASCADE)
+    isAvailable = models.BooleanField()
+    reserved_dates = []
+    #need to store all time periods for reserved loans for each
+    #piece of hardware
 
     def __str__(self):
-        return self.name + " , " + self.product_ID
+        return f'{self.name}, {self.product_ID}'
+class Loan(models.Model):
+    target = models.ForeignKey(to=Hardware, related_name='hardware_requested', on_delete=models.CASCADE, help_text='Equipment being requested' )
+    loan_start = models.DateTimeField('start time and date of loan')
+    loan_return = models.DateTimeField(help_text='return time and date of loan')
+    recipient = models.ForeignKey(to=LRCDatabaseUser, on_delete=models.CASCADE)
 
-    def checkAvailability(self):
-        return self.isAvailable
+    def checkAvailabilty(self):
+        for loans in self.target.reserved_dates:
+            #self is same as existing loan
+            if self.loan_start == loans.loan_start and self.loan_end == loans.loan_end:
+                return False
+            #self wants to end after another loan has started
+            if self.loan_return > loans.loan_start and self.loan_return < loans.loan_return:
+                return False
+            #self is completely within the bounds of another loan
+            if self.loan_start > loans.loan_start and self.loan_return < loans.loan_return:
+                return False
+            #self starts before another loan ends
+            if self.loan_start > loans.start and self.loan_start < loans.loan_return:
+                return False
+        return True
+                
 
-    def changeAvailability(self):
-        if self.checkAvailability == True:
-            self.isAvailable = False
+    def add_loan(self):
+        self.target.reserved_dates.append(self)
+
+    def __str__(self):
+        if self.checkAvailability():
+            return f'{self.recipient}\nLoan Start Date: {self.start_loan}\nLoan End Date: {self.return_loan}\nItem: {self.target}'
         else:
-            self.isAvailable = True
+            return f'Item: {self.target} is unavailable at that designated time'
 
-    def getName(self):
-        return self.name
+    # def checkAvailability(self):
+    #     return self.isAvailable
 
-    def changeName(self, newName):
-        self.name = newName
+    # def changeAvailability(self):
+    #     if self.checkAvailability == True:
+    #         self.isAvailable = False
+    #     else:
+    #         self.isAvailable = True
 
-    def getID(self):
-        return self.product_ID
+    # def getName(self):
+    #     return self.name
+
+    # def changeName(self, newName):
+    #     self.name = newName
+
+    # def getID(self):
+    #     return self.product_ID
     
-    def changeID(self, newID):
-        self.product_ID = newID
+    # def changeID(self, newID):
+    #     self.product_ID = newID

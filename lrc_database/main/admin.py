@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Course, Hardware, LRCDatabaseUser, TutoringShift, TutoringShiftChangeRequest
+from .models import Course, Hardware, LRCDatabaseUser, TutoringShift, TutoringShiftChangeRequest, Loan
 
 
 class CourseAdmin(admin.ModelAdmin):
@@ -23,9 +23,13 @@ class TutoringShiftChangeRequestAdmin(admin.ModelAdmin):
 class HardwareAdmin(admin.ModelAdmin):
     pass
 
+class LoanAdmin(admin.ModelAdmin):
+    pass
+
 
 admin.site.register(Course, CourseAdmin)
 admin.site.register(LRCDatabaseUser, LRCDatabaseUserAdmin)
 admin.site.register(TutoringShift, TutoringShiftAdmin)
 admin.site.register(TutoringShiftChangeRequest, TutoringShiftChangeRequestAdmin)
 admin.site.register(Hardware, HardwareAdmin)
+admin.site.register(Loan, LoanAdmin)
