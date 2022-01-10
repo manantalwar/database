@@ -44,6 +44,7 @@ class LoanAdmin(admin.ModelAdmin):
     get_hardware_name.short_description = "Hardware"
     get_hardware_name.admin_order_field = "hardware__name"
 
+
 admin.site.register(Course, CourseAdmin)
 admin.site.register(LRCDatabaseUser, LRCDatabaseUserAdmin)
 admin.site.register(TutoringShift, TutoringShiftAdmin)
