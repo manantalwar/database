@@ -35,6 +35,7 @@ class HardwareAdmin(admin.ModelAdmin):
     ordering = ("name", "is_available")
     list_editable = ("is_available",)
 
+
 class LoanAdmin(admin.ModelAdmin):
     list_display = ("get_hardware_name", "start_time", "return_time", "hardware_user")
 
@@ -42,7 +43,6 @@ class LoanAdmin(admin.ModelAdmin):
         return obj.Hardware.name
     get_hardware_name.short_description = "Hardware"
     get_hardware_name.admin_order_field = "hardware__name"
-
 
 admin.site.register(Course, CourseAdmin)
 admin.site.register(LRCDatabaseUser, LRCDatabaseUserAdmin)

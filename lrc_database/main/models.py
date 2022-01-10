@@ -106,22 +106,21 @@ class TutoringShiftChangeRequest(models.Model):
         help_text="The new location where this session will be held, e.g. GSMN 64, if this request is approved.",
     )
 
-   
-class Hardware(models.Model):
 
+class Hardware(models.Model):
     name = models.CharField(max_length=200)
     is_available = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
 
-class Loan(models.Model):
 
+class Loan(models.Model):
     target = models.ForeignKey(
         to=Hardware,
-        related_name= "intended_hardware_to_borrow",
-         on_delete=models.CASCADE,
-         help_text="The desired hardware being requested")
+        related_name="intended_hardware_to_borrow",
+        on_delete=models.CASCADE,
+        help_text="The desired hardware being requested")
 
     hardware_user = models.ForeignKey(
         to=LRCDatabaseUser,
@@ -129,5 +128,5 @@ class Loan(models.Model):
         help_text="The LRC user borrowing the hardware")
 
     start_time = models.DateTimeField()
-    
+
     return_time = models.DateTimeField()
