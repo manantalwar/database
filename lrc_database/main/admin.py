@@ -5,7 +5,7 @@ from .models import Course, Hardware, LRCDatabaseUser, TutoringShift, TutoringSh
 
 
 class CourseAdmin(admin.ModelAdmin):
-    pass
+    ordering = ("department", "number")
 
 
 class LRCDatabaseUserAdmin(UserAdmin):
@@ -13,15 +13,26 @@ class LRCDatabaseUserAdmin(UserAdmin):
 
 
 class TutoringShiftAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("tutor", "start", "duration", "location")
 
 
 class TutoringShiftChangeRequestAdmin(admin.ModelAdmin):
-    pass
+    fieldsets = (
+        (
+            "Approval",
+            {"fields": ("target", "reason", "approved", "approved_by", "approved_on")},
+        ),
+        (
+            "New data",
+            {"fields": ("new_tutor", "new_start", "new_duration", "new_location")},
+        ),
+    )
+    list_display = ("target", "reason", "approved", "approved_by", "approved_on")
 
 
 class HardwareAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("name", "is_available")
+    ordering = ("name",)
 
 class LoanAdmin(admin.ModelAdmin):
     pass
@@ -32,4 +43,3 @@ admin.site.register(LRCDatabaseUser, LRCDatabaseUserAdmin)
 admin.site.register(TutoringShift, TutoringShiftAdmin)
 admin.site.register(TutoringShiftChangeRequest, TutoringShiftChangeRequestAdmin)
 admin.site.register(Hardware, HardwareAdmin)
-admin.site.register(Loan, LoanAdmin)
