@@ -33,7 +33,7 @@ class TutoringShiftChangeRequestAdmin(admin.ModelAdmin):
 class HardwareAdmin(admin.ModelAdmin):
     list_display = ("name", "is_available")
     ordering = ("name", "is_available")
-    list_editable = ("is_available")
+    list_editable = ("is_available",)
 
 class LoanAdmin(admin.ModelAdmin):
     list_display = ("get_hardware_name", "start_time", "return_time", "hardware_user")
