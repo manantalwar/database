@@ -32,10 +32,16 @@ class TutoringShiftChangeRequestAdmin(admin.ModelAdmin):
 
 class HardwareAdmin(admin.ModelAdmin):
     list_display = ("name", "is_available")
-    ordering = ("name",)
+    ordering = ("name", "is_available")
+    list_editable = ("is_available")
 
 class LoanAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("get_hardware_name", "start_time", "return_time", "hardware_user")
+
+    def get_hardware_name(self, obj):
+        return obj.Hardware.name
+    get_hardware_name.short_description = "Hardware"
+    get_hardware_name.admin_order_field = "hardware__name"
 
 
 admin.site.register(Course, CourseAdmin)
@@ -43,3 +49,4 @@ admin.site.register(LRCDatabaseUser, LRCDatabaseUserAdmin)
 admin.site.register(TutoringShift, TutoringShiftAdmin)
 admin.site.register(TutoringShiftChangeRequest, TutoringShiftChangeRequestAdmin)
 admin.site.register(Hardware, HardwareAdmin)
+admin.site.register(Loan, LoanAdmin)

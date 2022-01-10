@@ -114,3 +114,20 @@ class Hardware(models.Model):
 
     def __str__(self):
         return self.name
+
+class Loan(models.Model):
+
+    target = models.ForeignKey(
+        to=Hardware,
+        related_name= "intended_hardware_to_borrow",
+         on_delete=models.CASCADE,
+         help_text="The desired hardware being requested")
+
+    hardware_user = models.ForeignKey(
+        to=LRCDatabaseUser,
+        on_delete=models.CASCADE,
+        help_text="The LRC user borrowing the hardware")
+
+    start_time = models.DateTimeField()
+    
+    return_time = models.DateTimeField()
