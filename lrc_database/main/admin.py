@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Course, Hardware, LRCDatabaseUser, TutoringShift, TutoringShiftChangeRequest, Loan
+from .models import Course, Hardware, Loan, LRCDatabaseUser, TutoringShift, TutoringShiftChangeRequest
 
 
 class CourseAdmin(admin.ModelAdmin):
