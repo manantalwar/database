@@ -37,12 +37,7 @@ class HardwareAdmin(admin.ModelAdmin):
 
 
 class LoanAdmin(admin.ModelAdmin):
-    list_display = ("get_hardware_name", "start_time", "return_time", "hardware_user")
-
-    def get_hardware_name(self, obj):
-        return obj.Hardware.name
-    get_hardware_name.short_description = "Hardware"
-    get_hardware_name.admin_order_field = "hardware__name"
+    list_display = ("target", "start_time", "return_time", "hardware_user")
 
 
 admin.site.register(Course, CourseAdmin)
