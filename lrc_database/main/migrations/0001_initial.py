@@ -13,78 +13,231 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('auth', '0012_alter_user_first_name_max_length'),
+        ("auth", "0012_alter_user_first_name_max_length"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='LRCDatabaseUser',
+            name="LRCDatabaseUser",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('password', models.CharField(max_length=128, verbose_name='password')),
-                ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
-                ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
-                ('username', models.CharField(error_messages={'unique': 'A user with that username already exists.'}, help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.', max_length=150, unique=True, validators=[django.contrib.auth.validators.UnicodeUsernameValidator()], verbose_name='username')),
-                ('first_name', models.CharField(blank=True, max_length=150, verbose_name='first name')),
-                ('last_name', models.CharField(blank=True, max_length=150, verbose_name='last name')),
-                ('email', models.EmailField(blank=True, max_length=254, verbose_name='email address')),
-                ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
-                ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
-                ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("password", models.CharField(max_length=128, verbose_name="password")),
+                (
+                    "last_login",
+                    models.DateTimeField(blank=True, null=True, verbose_name="last login"),
+                ),
+                (
+                    "is_superuser",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Designates that this user has all permissions without explicitly assigning them.",
+                        verbose_name="superuser status",
+                    ),
+                ),
+                (
+                    "username",
+                    models.CharField(
+                        error_messages={"unique": "A user with that username already exists."},
+                        help_text="Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                        max_length=150,
+                        unique=True,
+                        validators=[django.contrib.auth.validators.UnicodeUsernameValidator()],
+                        verbose_name="username",
+                    ),
+                ),
+                (
+                    "first_name",
+                    models.CharField(blank=True, max_length=150, verbose_name="first name"),
+                ),
+                (
+                    "last_name",
+                    models.CharField(blank=True, max_length=150, verbose_name="last name"),
+                ),
+                (
+                    "email",
+                    models.EmailField(blank=True, max_length=254, verbose_name="email address"),
+                ),
+                (
+                    "is_staff",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Designates whether the user can log into this admin site.",
+                        verbose_name="staff status",
+                    ),
+                ),
+                (
+                    "is_active",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Designates whether this user should be treated as active. Unselect this instead of deleting accounts.",
+                        verbose_name="active",
+                    ),
+                ),
+                (
+                    "date_joined",
+                    models.DateTimeField(default=django.utils.timezone.now, verbose_name="date joined"),
+                ),
             ],
             options={
-                'verbose_name': 'user',
-                'verbose_name_plural': 'users',
-                'abstract': False,
+                "verbose_name": "user",
+                "verbose_name_plural": "users",
+                "abstract": False,
             },
             managers=[
-                ('objects', django.contrib.auth.models.UserManager()),
+                ("objects", django.contrib.auth.models.UserManager()),
             ],
         ),
         migrations.CreateModel(
-            name='Course',
+            name="Course",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('department', models.CharField(help_text='Department string, like COMPSCI or MATH.', max_length=16)),
-                ('number', models.IntegerField(help_text='Course number, like the 187 in COMPSCI 187.', validators=[django.core.validators.MinValueValidator(100), django.core.validators.MaxValueValidator(999)])),
-                ('name', models.CharField(help_text='The human-legible name of the course, like "Programming with Data Structures."', max_length=64)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "department",
+                    models.CharField(
+                        help_text="Department string, like COMPSCI or MATH.",
+                        max_length=16,
+                    ),
+                ),
+                (
+                    "number",
+                    models.IntegerField(
+                        help_text="Course number, like the 187 in COMPSCI 187.",
+                        validators=[
+                            django.core.validators.MinValueValidator(100),
+                            django.core.validators.MaxValueValidator(999),
+                        ],
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        help_text='The human-legible name of the course, like "Programming with Data Structures."',
+                        max_length=64,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='TutoringShift',
+            name="TutoringShift",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('start', models.DateTimeField()),
-                ('duration', models.DurationField()),
-                ('location', models.CharField(max_length=32)),
-                ('tutor', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='main.lrcdatabaseuser')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("start", models.DateTimeField()),
+                ("duration", models.DurationField()),
+                ("location", models.CharField(max_length=32)),
+                (
+                    "tutor",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="main.lrcdatabaseuser",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='lrcdatabaseuser',
-            name='courses_tutored',
-            field=models.ManyToManyField(to='main.Course'),
+            model_name="lrcdatabaseuser",
+            name="courses_tutored",
+            field=models.ManyToManyField(to="main.Course"),
         ),
         migrations.AddField(
-            model_name='lrcdatabaseuser',
-            name='groups',
-            field=models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.Group', verbose_name='groups'),
+            model_name="lrcdatabaseuser",
+            name="groups",
+            field=models.ManyToManyField(
+                blank=True,
+                help_text="The groups this user belongs to. A user will get all permissions granted to each of their groups.",
+                related_name="user_set",
+                related_query_name="user",
+                to="auth.Group",
+                verbose_name="groups",
+            ),
         ),
         migrations.AddField(
-            model_name='lrcdatabaseuser',
-            name='user_permissions',
-            field=models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.Permission', verbose_name='user permissions'),
+            model_name="lrcdatabaseuser",
+            name="user_permissions",
+            field=models.ManyToManyField(
+                blank=True,
+                help_text="Specific permissions for this user.",
+                related_name="user_set",
+                related_query_name="user",
+                to="auth.Permission",
+                verbose_name="user permissions",
+            ),
         ),
         migrations.CreateModel(
-            name='TutoringShiftChangeRequest',
+            name="TutoringShiftChangeRequest",
             fields=[
-                ('tutoringshift_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='main.tutoringshift')),
-                ('reason', models.CharField(help_text='Explanation for why this change is being requested.', max_length=512)),
-                ('approved', models.BooleanField(default=False, help_text='Whether the request is approved or not.')),
-                ('approved_on', models.DateTimeField(help_text='When the request was approved.')),
-                ('approved_by', models.ForeignKey(default=None, help_text='The user (if any) who approved the change request.', null=True, on_delete=django.db.models.deletion.CASCADE, to='main.lrcdatabaseuser')),
-                ('target', models.ForeignKey(help_text='Tutoring shift to edit.', on_delete=django.db.models.deletion.CASCADE, related_name='tutoring_shift_change_request_target', to='main.tutoringshift')),
+                (
+                    "tutoringshift_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="main.tutoringshift",
+                    ),
+                ),
+                (
+                    "reason",
+                    models.CharField(
+                        help_text="Explanation for why this change is being requested.",
+                        max_length=512,
+                    ),
+                ),
+                (
+                    "approved",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Whether the request is approved or not.",
+                    ),
+                ),
+                (
+                    "approved_on",
+                    models.DateTimeField(help_text="When the request was approved."),
+                ),
+                (
+                    "approved_by",
+                    models.ForeignKey(
+                        default=None,
+                        help_text="The user (if any) who approved the change request.",
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="main.lrcdatabaseuser",
+                    ),
+                ),
+                (
+                    "target",
+                    models.ForeignKey(
+                        help_text="Tutoring shift to edit.",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="tutoring_shift_change_request_target",
+                        to="main.tutoringshift",
+                    ),
+                ),
             ],
-            bases=('main.tutoringshift',),
+            bases=("main.tutoringshift",),
         ),
     ]
