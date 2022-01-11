@@ -129,4 +129,4 @@ class Loan(models.Model):
 
     start_time = models.DateTimeField()
 
-    return_time = models.DateTimeField()
+    return_time = models.DateTimeField(null=True)
