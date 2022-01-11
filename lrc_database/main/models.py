@@ -172,9 +172,25 @@ class SISessionChangeRequest(models.Model):
 
 
 class Hardware(models.Model):
-
     name = models.CharField(max_length=200)
     is_available = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
+
+
+class Loan(models.Model):
+    target = models.ForeignKey(
+        to=Hardware,
+        related_name="intended_hardware_to_borrow",
+        on_delete=models.CASCADE,
+        help_text="The desired hardware being requested")
+
+    hardware_user = models.ForeignKey(
+        to=LRCDatabaseUser,
+        on_delete=models.CASCADE,
+        help_text="The LRC user borrowing the hardware")
+
+    start_time = models.DateTimeField()
+
+    return_time = models.DateTimeField(null=True, blank=True)
