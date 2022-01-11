@@ -1,0 +1,8 @@
+body {
+    background-color: #881c1c; /* https://www.umass.edu/brand/elements/color */
+}
+
+#main-container {
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 15px 30px;
+}
