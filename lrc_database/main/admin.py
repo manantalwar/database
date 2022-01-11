@@ -4,7 +4,6 @@ from .models import (Course, Hardware, Loan, LRCDatabaseUser, SISession, SISessi
                      TutoringShiftChangeRequest)
 
 
-
 class CourseAdmin(admin.ModelAdmin):
     ordering = ("department", "number")
 
@@ -67,4 +66,3 @@ admin.site.register(Hardware, HardwareAdmin)
 admin.site.register(SISession, SISessionAdmin)
 admin.site.register(SISessionChangeRequest, SISessionChangeRequestAdmin)
 admin.site.register(Loan, LoanAdmin)
-
