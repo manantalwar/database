@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Course, Hardware, LRCDatabaseUser, TutoringShift, TutoringShiftChangeRequest
+from .models import Course, Hardware, Loan, LRCDatabaseUser, TutoringShift, TutoringShiftChangeRequest
 
 
 class CourseAdmin(admin.ModelAdmin):
@@ -32,7 +32,12 @@ class TutoringShiftChangeRequestAdmin(admin.ModelAdmin):
 
 class HardwareAdmin(admin.ModelAdmin):
     list_display = ("name", "is_available")
-    ordering = ("name",)
+    ordering = ("name", "is_available")
+    list_editable = ("is_available",)
+
+
+class LoanAdmin(admin.ModelAdmin):
+    list_display = ("target", "start_time", "return_time", "hardware_user")
 
 
 admin.site.register(Course, CourseAdmin)
@@ -40,3 +45,4 @@ admin.site.register(LRCDatabaseUser, LRCDatabaseUserAdmin)
 admin.site.register(TutoringShift, TutoringShiftAdmin)
 admin.site.register(TutoringShiftChangeRequest, TutoringShiftChangeRequestAdmin)
 admin.site.register(Hardware, HardwareAdmin)
+admin.site.register(Loan, LoanAdmin)
