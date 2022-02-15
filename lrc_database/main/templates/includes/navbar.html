@@ -6,8 +6,23 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbar-content">
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbar-account-dropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Employees
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbar-account-dropdown">
+                        <li><a class="dropdown-item" href="{% url 'list_users' 'SIs' %}">SI leaders</a></li>
+                        <li><a class="dropdown-item" href="{% url 'list_users' 'Tutors' %}">Tutors</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="{% url 'list_users' 'Office staff' %}">Office staff</a></li>
+                        <li><a class="dropdown-item" href="{% url 'list_users' 'Supervisors' %}">Supervisors</a></li>
+                    </ul>
+                </li>
+            </ul>
             {% if user.is_authenticated %}
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbar-account-dropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
@@ -21,7 +36,7 @@
                 </ul>
             {% endif %}
             {% if user.is_authenticated %}
-                <span class="navbar-text d-flex">
+                <span class="navbar-text">
                     Signed in as {{ user.first_name }} {{ user.last_name }}
                 </span>
             {% endif %}
