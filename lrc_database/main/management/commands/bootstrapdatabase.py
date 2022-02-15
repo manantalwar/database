@@ -4,11 +4,19 @@ from collections import defaultdict
 from typing import DefaultDict
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from faker import Faker
-from main.models import (Course, Hardware, LRCDatabaseUser, SISession, SISessionChangeRequest, TutoringShift,
-                         TutoringShiftChangeRequest)
+from main.models import (
+    Course,
+    Hardware,
+    LRCDatabaseUser,
+    SISession,
+    SISessionChangeRequest,
+    TutoringShift,
+    TutoringShiftChangeRequest,
+)
 
 User = get_user_model()
 fake = Faker()
@@ -55,6 +63,16 @@ def create_other_users(user_count: int):
             last_name=last_name,
             email=email,
         )
+
+
+def create_groups():
+    group_names = ("Office staff", "SIs", "Supervisors", "Tutors")
+    for group_name in group_names:
+        Group.objects.create(name=group_name)
+    for user in User.objects.exclude(username="admin"):
+        random_group = get_random_object(Group)
+        random_group.user_set.add(user)
+        random_group.save()
 
 
 def create_courses(course_count: int):
@@ -170,6 +188,7 @@ class Command(BaseCommand):
             options["superuser_email"],
         )
         create_other_users(options["user_count"])
+        create_groups()
         create_courses(options["course_count"])
         create_tutoring_shifts(options["tutoring_shift_count"])
         create_tutoring_shift_change_requests(options["tutoring_shift_change_request_count"])
