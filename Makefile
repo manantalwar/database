@@ -1,6 +1,6 @@
 format:
-	black lrc_database --line-length 120
 	isort lrc_database
+	black lrc_database --line-length 120
 
 check:
 	flake8 lrc_database

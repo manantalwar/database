@@ -1,4 +1,6 @@
+crispy-bootstrap5>=0.6,<0.7
 Django>=4.0,<4.1
+django-crispy-forms>=1.14,<1.15
 django-stubs>=1.9,<1.10
 Faker>=11.3,<11.4
 flake8>=4.0,<4.1

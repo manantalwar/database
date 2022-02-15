@@ -184,12 +184,12 @@ class Loan(models.Model):
         to=Hardware,
         related_name="intended_hardware_to_borrow",
         on_delete=models.CASCADE,
-        help_text="The desired hardware being requested")
+        help_text="The desired hardware being requested",
+    )
 
     hardware_user = models.ForeignKey(
-        to=LRCDatabaseUser,
-        on_delete=models.CASCADE,
-        help_text="The LRC user borrowing the hardware")
+        to=LRCDatabaseUser, on_delete=models.CASCADE, help_text="The LRC user borrowing the hardware"
+    )
 
     start_time = models.DateTimeField()
 
