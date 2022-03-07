@@ -1,22 +1,14 @@
-import datetime
 import random
 from collections import defaultdict
 from typing import DefaultDict
 
+import pytz
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from faker import Faker
-from main.models import (
-    Course,
-    Hardware,
-    LRCDatabaseUser,
-    SISession,
-    SISessionChangeRequest,
-    TutoringShift,
-    TutoringShiftChangeRequest,
-)
+from main.models import Course, Hardware, LRCDatabaseUser, Shift, ShiftChangeRequest
 
 User = get_user_model()
 fake = Faker()
@@ -47,16 +39,28 @@ def get_random_location() -> str:
 
 
 def create_superuser(username: str, password: str, email: str):
+    print("Creating superuser...")
     User.objects.create_superuser(username=username, password=password, email=email)
 
 
+def create_special_users():
+    print("Creating special users...")
+    User.objects.create_user(username="si", password="password", first_name="Test SI", last_name="user")
+    User.objects.create_user(username="tutor", password="password", first_name="Test Tutor", last_name="user")
+    User.objects.create_user(
+        username="office_staff", password="password", first_name="Test Office Staff", last_name="user"
+    )
+    User.objects.create_user(username="supervisor", password="password", first_name="Test Supervisor", last_name="user")
+
+
 def create_other_users(user_count: int):
+    print("Creating other users...")
     for _ in range(user_count):
         first_name = fake.first_name()
         last_name = fake.last_name()
         username = f"{first_name.lower()}{last_name.lower()}"
         email = f"{username}@umass.edu"
-        User.objects.create(
+        User.objects.create_user(
             username=username,
             password="password",
             first_name=first_name,
@@ -66,16 +70,27 @@ def create_other_users(user_count: int):
 
 
 def create_groups():
+    print("Creating groups...")
     group_names = ("Office staff", "SIs", "Supervisors", "Tutors")
     for group_name in group_names:
         Group.objects.create(name=group_name)
     for user in User.objects.exclude(username="admin"):
-        random_group = get_random_object(Group)
-        random_group.user_set.add(user)
-        random_group.save()
+        if user.username == "si":
+            group = Group.objects.filter(name="SIs").first()
+        elif user.username == "tutor":
+            group = Group.objects.filter(name="Tutors").first()
+        elif user.username == "office_staff":
+            group = Group.objects.filter(name="Office staff").first()
+        elif user.username == "supervisor":
+            group = Group.objects.filter(name="Supervisors").first()
+        else:
+            group = get_random_object(Group)
+        group.user_set.add(user)
+        group.save()
 
 
 def create_courses(course_count: int):
+    print("Creating courses...")
     for _ in range(course_count):
         department = random.choice(DEPARTMENTS)
         number = random.randint(100, 999)
@@ -83,66 +98,63 @@ def create_courses(course_count: int):
         Course.objects.create(department=department, number=number, name=name)
 
 
-def create_tutoring_shifts(shift_count: int):
-    for _ in range(shift_count):
-        tutor = get_random_object(LRCDatabaseUser)
+def create_tutor_course_associations(courses_per_tutor: int):
+    print("Creating tutor/course associations...")
+    for tutor in LRCDatabaseUser.objects.filter(groups__name="Tutors"):
+        for _ in range(courses_per_tutor):
+            c = get_random_object(Course)
+            tutor.courses_tutored.add(c)
+
+
+def all_of_day_in_month(year: int, month: int, weekday: int, hour: int):
+    d = timezone.datetime(year, month, 1, hour, 0, 0, tzinfo=pytz.UTC) + timezone.timedelta(days=6 - weekday)
+    ret = []
+    while d.month == month:
+        ret.append(d)
+        d += timezone.timedelta(days=7)
+    return ret
+
+
+def create_shifts(shift_count: int):
+    print("Creating shifts...")
+    users = LRCDatabaseUser.objects.all()
+    current_year = timezone.now().year
+    current_month = timezone.now().month
+    for user in users:
         location = get_random_location()
-        start = timezone.now()
-        duration = datetime.timedelta(hours=1)
-        TutoringShift.objects.create(tutor=tutor, location=location, start=start, duration=duration)
-
-
-def create_tutoring_shift_change_requests(request_count: int):
-    for _ in range(request_count):
-        target = get_random_object(TutoringShift)
-        reason = fake.text(max_nb_chars=512)
-        approved = random.random() < 0.5
-        approved_by = get_random_object(LRCDatabaseUser) if approved else None
-        approved_on = timezone.now() if approved else None
-        new_tutor = get_random_object(LRCDatabaseUser) if random.random() < 0.25 else None
-        new_start = timezone.now() if random.random() < 0.25 else None
-        new_duration = datetime.timedelta(hours=2) if random.random() < 0.25 else None
-        new_location = get_random_location() if random.random() < 0.25 else None
-        TutoringShiftChangeRequest.objects.create(
-            target=target,
-            reason=reason,
-            approved=approved,
-            approved_by=approved_by,
-            approved_on=approved_on,
-            new_tutor=new_tutor,
-            new_start=new_start,
-            new_duration=new_duration,
-            new_location=new_location,
+        weekday_1 = random.randint(0, 6)
+        weekday_2 = random.randint(0, 6)
+        hour_1 = random.randint(0, 23)
+        hour_2 = random.randint(0, 23)
+        shift_times = all_of_day_in_month(current_year, current_month, weekday_1, hour_1) + all_of_day_in_month(
+            current_year, current_month, weekday_2, hour_2
         )
+        for shift_time in shift_times:
+            print(shift_time.minute)
+            Shift.objects.create(
+                associated_person=user, location=location, start=shift_time, duration=timezone.timedelta(hours=1)
+            )
 
 
-def create_si_sessions(session_count: int):
-    for _ in range(session_count):
-        si_leader = get_random_object(LRCDatabaseUser)
-        start = timezone.now()
-        duration = datetime.timedelta(hours=1)
-        location = get_random_location()
-        SISession.objects.create(si_leader=si_leader, start=start, duration=duration, location=location)
-
-
-def create_si_session_change_requests(request_count: int):
+def create_shift_change_requests(request_count: int):
+    print("Creating shift change requests...")
     for _ in range(request_count):
-        target = get_random_object(SISession)
+        target = get_random_object(Shift)
         reason = fake.text(max_nb_chars=512)
         approved = random.random() < 0.5
         approved_by = get_random_object(LRCDatabaseUser) if approved else None
         approved_on = timezone.now() if approved else None
-        new_si_leader = get_random_object(LRCDatabaseUser) if random.random() < 0.25 else None
+        new_associated_person = get_random_object(LRCDatabaseUser) if random.random() < 0.25 else None
         new_start = timezone.now() if random.random() < 0.25 else None
-        new_duration = datetime.timedelta(hours=2) if random.random() < 0.25 else None
+        new_duration = timezone.timedelta(hours=2) if random.random() < 0.25 else None
         new_location = get_random_location() if random.random() < 0.25 else None
-        SISessionChangeRequest.objects.create(
+        ShiftChangeRequest.objects.create(
             target=target,
             reason=reason,
             approved=approved,
             approved_by=approved_by,
             approved_on=approved_on,
-            new_si_leader=new_si_leader,
+            new_associated_person=new_associated_person,
             new_start=new_start,
             new_duration=new_duration,
             new_location=new_location,
@@ -150,6 +162,7 @@ def create_si_session_change_requests(request_count: int):
 
 
 def create_hardware(hardware_count: int):
+    print("Creating hardware...")
     HARDWARE_TYPES = ("Projector", "Calculator", "Laptop", "Power adapter")
     hardware_counts: DefaultDict[str, int] = defaultdict(int)
     for _ in range(hardware_count):
@@ -169,16 +182,15 @@ class Command(BaseCommand):
     """
 
     def add_arguments(self, parser) -> None:
-        parser.add_argument("--superuser-username", default="admin")
-        parser.add_argument("--superuser-password", default="admin")
-        parser.add_argument("--superuser-email", default="admin@umass.edu")
-        parser.add_argument("--user-count", default=100)
-        parser.add_argument("--course-count", default=100)
-        parser.add_argument("--tutoring-shift-count", default=100)
-        parser.add_argument("--tutoring-shift-change-request-count", default=100)
-        parser.add_argument("--hardware-count", default=100)
-        parser.add_argument("--si-session-count", default=100)
-        parser.add_argument("--si-session-change-request-count", default=100)
+        parser.add_argument("--superuser-username", default="admin", type=str)
+        parser.add_argument("--superuser-password", default="admin", type=str)
+        parser.add_argument("--superuser-email", default="admin@umass.edu", type=str)
+        parser.add_argument("--user-count", default=100, type=int)
+        parser.add_argument("--course-count", default=100, type=int)
+        parser.add_argument("--courses-per-tutor", default=3, type=int)
+        parser.add_argument("--shift-count", default=100, type=int)
+        parser.add_argument("--shift-change-request-count", default=100, type=int)
+        parser.add_argument("--hardware-count", default=100, type=int)
 
     def handle(self, *args, **options):
         create_hardware(options["hardware_count"])
@@ -187,10 +199,10 @@ class Command(BaseCommand):
             options["superuser_password"],
             options["superuser_email"],
         )
+        create_special_users()
         create_other_users(options["user_count"])
         create_groups()
         create_courses(options["course_count"])
-        create_tutoring_shifts(options["tutoring_shift_count"])
-        create_tutoring_shift_change_requests(options["tutoring_shift_change_request_count"])
-        create_si_sessions(options["si_session_count"])
-        create_si_session_change_requests(options["si_session_change_request_count"])
+        create_tutor_course_associations(options["courses_per_tutor"])
+        create_shifts(options["shift_count"])
+        create_shift_change_requests(options["shift_change_request_count"])

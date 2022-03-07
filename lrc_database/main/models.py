@@ -31,35 +31,35 @@ class LRCDatabaseUser(AbstractUser):
             return f"{self.first_name} {self.last_name}"
 
 
-class TutoringShift(models.Model):
-    tutor = models.ForeignKey(
+class Shift(models.Model):
+    associated_person = models.ForeignKey(
         to=LRCDatabaseUser,
         on_delete=models.CASCADE,
-        help_text="The tutor who is responsible for this session.",
+        help_text="The person who is associated with this work shift.",
     )
-    start = models.DateTimeField(help_text="The time that the session starts.")
-    duration = models.DurationField(help_text="How long the session will last, in HH:MM:SS format.")
+    start = models.DateTimeField(help_text="The time that the shift starts.")
+    duration = models.DurationField(help_text="How long the shift will last, in HH:MM:SS format.")
     location = models.CharField(
         max_length=32,
-        help_text="The location where the session will be held, e.g. GSMN 64.",
+        help_text="The location where the shift will be occur, e.g. GSMN 64.",
     )
 
     def __str__(self):
-        return f"{self.tutor} in {self.location} at {self.start}"
+        return f"{self.associated_person} in {self.location} at {self.start}"
 
 
-class TutoringShiftChangeRequest(models.Model):
+class ShiftChangeRequest(models.Model):
     target = models.ForeignKey(
-        to=TutoringShift,
-        related_name="tutoring_shift_change_request_target",
+        to=Shift,
+        related_name="shift_change_request_target",
         on_delete=models.CASCADE,
-        help_text="Tutoring shift to edit.",
+        help_text="Shift to edit.",
     )
     reason = models.CharField(max_length=512, help_text="Explanation for why this change is being requested.")
     approved = models.BooleanField(default=False, help_text="Whether the request is approved or not.")
     approved_by = models.ForeignKey(
         to=LRCDatabaseUser,
-        related_name="tutoring_shift_change_request_approved_by",
+        related_name="shift_change_request_approved_by",
         blank=True,
         null=True,
         default=None,
@@ -68,106 +68,32 @@ class TutoringShiftChangeRequest(models.Model):
     )
     approved_on = models.DateTimeField(help_text="When the request was approved.", blank=True, null=True, default=None)
 
-    new_tutor = models.ForeignKey(
+    new_associated_person = models.ForeignKey(
         to=LRCDatabaseUser,
-        related_name="tutoring_shift_change_request_new_tutor",
+        related_name="shift_change_request_new_associated_person",
         on_delete=models.CASCADE,
         null=True,
         default=None,
-        help_text="The new tutor who will be responsible for the session if this request is approved.",
+        help_text="The new person who will be associated with this shift if this request is approved.",
     )
     new_start = models.DateTimeField(
         blank=True,
         null=True,
         default=None,
-        help_text="The new time that the session starts if this request is approved.",
+        help_text="The new time that the shift starts if this request is approved.",
     )
     new_duration = models.DurationField(
         blank=True,
         null=True,
         default=None,
-        help_text="How long the session will last, in HH:MM:SS format, if this request is approved.",
+        help_text="How long the shift will last, in HH:MM:SS format, if this request is approved.",
     )
     new_location = models.CharField(
         max_length=32,
         blank=True,
         null=True,
         default=None,
-        help_text="The new location where this session will be held, e.g. GSMN 64, if this request is approved.",
-    )
-
-
-class SISession(models.Model):
-    class Meta:
-        verbose_name = "SI session"
-        verbose_name_plural = "SI sessions"
-
-    si_leader = models.ForeignKey(
-        to=LRCDatabaseUser,
-        on_delete=models.CASCADE,
-        help_text="The SI leader who is responsible for this session.",
-    )
-    start = models.DateTimeField(help_text="The time that the session starts.")
-    duration = models.DurationField(help_text="How long the session will last, in HH:MM:SS format.")
-    location = models.CharField(
-        max_length=32,
-        help_text="The location where the session will be held, e.g. GSMN 64.",
-    )
-
-    def __str__(self):
-        return f"{self.si_leader} in {self.location} at {self.start}"
-
-
-class SISessionChangeRequest(models.Model):
-    class Meta:
-        verbose_name = "SI session change request"
-        verbose_name_plural = "SI session change requests"
-
-    target = models.ForeignKey(
-        to=SISession,
-        related_name="si_session_change_request_target",
-        on_delete=models.CASCADE,
-        help_text="SI session to edit.",
-    )
-    reason = models.CharField(max_length=512, help_text="Explanation for why this change is being requested.")
-    approved = models.BooleanField(default=False, help_text="Whether the request is approved or not.")
-    approved_by = models.ForeignKey(
-        to=LRCDatabaseUser,
-        related_name="si_session_change_request_approved_by",
-        blank=True,
-        null=True,
-        default=None,
-        on_delete=models.CASCADE,
-        help_text="The user (if any) who approved the change request.",
-    )
-    approved_on = models.DateTimeField(help_text="When the request was approved.", blank=True, null=True, default=None)
-
-    new_si_leader = models.ForeignKey(
-        to=LRCDatabaseUser,
-        related_name="si_session_change_request_new_si_leader",
-        on_delete=models.CASCADE,
-        null=True,
-        default=None,
-        help_text="The new SI leader who will be responsible for the session if this request is approved.",
-    )
-    new_start = models.DateTimeField(
-        blank=True,
-        null=True,
-        default=None,
-        help_text="The new time that the session starts if this request is approved.",
-    )
-    new_duration = models.DurationField(
-        blank=True,
-        null=True,
-        default=None,
-        help_text="How long the session will last, in HH:MM:SS format, if this request is approved.",
-    )
-    new_location = models.CharField(
-        max_length=32,
-        blank=True,
-        null=True,
-        default=None,
-        help_text="The new location where this session will be held, e.g. GSMN 64, if this request is approved.",
+        help_text="The new location where this shift will occur, e.g. GSMN 64, if this request is approved.",
     )
 
 

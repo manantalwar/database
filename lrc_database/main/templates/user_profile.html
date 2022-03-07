@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+    {% comment %}
+        target_user is the user whose data is being displayed. user is the user
+        for the current session.
+    {% endcomment %}
+    <div class="row">
+        <h1>{{ target_user.first_name }} {{ target_user.last_name }}</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div id="calendar"></div>
+            {% comment %}
+                TODO: find a better place for this script.
+            {% endcomment %}
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    let calendarEl = document.getElementById('calendar');
+                    let calendar = new FullCalendar.Calendar(calendarEl, {
+                        initialView: 'dayGridMonth',
+                        themeSystem: 'bootstrap5',
+                        events: [
+                            {% comment %}
+                                Gross, should be replaced.
+                            {% endcomment %}
+                            {% for shift in target_users_shifts %}
+                                {
+                                    title: '{{ shift }}',
+                                    start: '{{ shift.start|date:"Y-m-d\TH:i:s" }}',
+                                },
+                            {% endfor %}
+                        ]
+                    });
+                    calendar.render()
+                });
+            </script>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    Biography
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><strong>Name:</strong> {{ target_user.first_name }} {{ target_user.last_name }}</p>
+                    <p class="card-text"><strong>Email:</strong> <a href="mailto:{{ target_user.email }}">{{ target_user.email }}</a></p>
+                    <p class="card-text"><strong>Groups:</strong> {{ target_user.groups.all|join:', '}}</p>
+                </div>
+            </div>
+            {% if target_user.groups.all.0.name == "Tutors" %}
+                <div class="card">
+                    <div class="card-header">
+                        Tutored courses
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            {% for course in target_user.courses_tutored.all %}
+                                <li>{{ course.department }} {{ course.number }}</li>
+                            {% empty %}
+                                <li><em>*crickets*</em></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
