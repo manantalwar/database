@@ -1,3 +1,5 @@
+{% load groups %}
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'index' %}">LRC Staff Database</a>
@@ -7,10 +9,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbar-content">
             <ul class="navbar-nav me-auto">
-                {% comment %}
-                    Let's find a better way to do group filtering. Custom filter maybe?
-                {% endcomment %}
-                {% if user.groups.all.0.name == "Office staff" or user.groups.all.0.name == "Supervisors" %}
+                {% if user|is_privileged %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbar-account-dropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
@@ -32,6 +31,7 @@
                             Account
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbar-account-dropdown">
+                            <li><a class="dropdown-item" href="{% url 'edit_profile' user.id %}">Edit profile</a></li>
                             <li><a class="dropdown-item" href="{% url 'password_change' %}">Change password</a></li>
                             <li><a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
                         </ul>

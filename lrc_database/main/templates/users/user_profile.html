@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load groups static %}
+
+{% block extra_includes %}
+    <script>const events = JSON.parse("{{ target_users_shifts|escapejs }}");</script>
+    <script src="{% static 'js/calendar.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    {% comment %}
+        target_user is the user whose data is being displayed. user is the user
+        for the current session.
+    {% endcomment %}
+    <div class="row">
+        <h1>{{ target_user.first_name }} {{ target_user.last_name }}</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div id="calendar"></div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    Biography
+                    {% if user.id == target_user.id %}
+                        <a href="{% url 'edit_profile' user.id %}">(edit)</a>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><strong>Name:</strong> {{ target_user.first_name }} {{ target_user.last_name }}</p>
+                    <p class="card-text"><strong>Email:</strong> <a href="mailto:{{ target_user.email }}">{{ target_user.email }}</a></p>
+                    <p class="card-text"><strong>Groups:</strong> {{ target_user.groups.all|join:', '}}</p>
+                    {% if target_user|is_si %}
+                        <p class="card-text"><strong>SI course:</strong> {{ target_user.si_course }}</p>
+                    {% endif %}
+                    {% if target_user|is_tutor %}
+                        <p class="card-text"><strong>Tutored courses:</strong> {{ target_user.courses_tutored.all|join:", " }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -23,6 +23,14 @@ class Course(models.Model):
 
 class LRCDatabaseUser(AbstractUser):
     courses_tutored = models.ManyToManyField(Course)
+    si_course = models.ForeignKey(
+        to=Course,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        default=None,
+        related_name="lrc_database_user_si_course",
+    )
 
     def __str__(self):
         if not (self.first_name and self.last_name):

@@ -102,8 +102,14 @@ def create_tutor_course_associations(courses_per_tutor: int):
     print("Creating tutor/course associations...")
     for tutor in LRCDatabaseUser.objects.filter(groups__name="Tutors"):
         for _ in range(courses_per_tutor):
-            c = get_random_object(Course)
-            tutor.courses_tutored.add(c)
+            tutor.courses_tutored.add(get_random_object(Course))
+
+
+def create_si_course_associations():
+    print("Creating SI/course associations...")
+    for si in LRCDatabaseUser.objects.filter(groups__name="SIs"):
+        si.si_course = get_random_object(Course)
+        si.save()
 
 
 def all_of_day_in_month(year: int, month: int, weekday: int, hour: int):
@@ -130,7 +136,6 @@ def create_shifts(shift_count: int):
             current_year, current_month, weekday_2, hour_2
         )
         for shift_time in shift_times:
-            print(shift_time.minute)
             Shift.objects.create(
                 associated_person=user, location=location, start=shift_time, duration=timezone.timedelta(hours=1)
             )
@@ -204,5 +209,6 @@ class Command(BaseCommand):
         create_groups()
         create_courses(options["course_count"])
         create_tutor_course_associations(options["courses_per_tutor"])
+        create_si_course_associations()
         create_shifts(options["shift_count"])
         create_shift_change_requests(options["shift_change_request_count"])
