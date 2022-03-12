@@ -32,7 +32,8 @@ def restrict_to_groups(*groups):
 
 @login_required
 def index(request):
-    return render(request, "base.html")
+    pending_shift_change_requests = ShiftChangeRequest.objects.filter(target__associated_person=request.user, approved=False)
+    return render(request, "index.html", {"change_requests": pending_shift_change_requests})
 
 
 @login_required
