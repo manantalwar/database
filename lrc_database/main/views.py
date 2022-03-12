@@ -32,7 +32,9 @@ def restrict_to_groups(*groups):
 
 @login_required
 def index(request):
-    pending_shift_change_requests = ShiftChangeRequest.objects.filter(target__associated_person=request.user, approved=False)
+    pending_shift_change_requests = ShiftChangeRequest.objects.filter(
+        target__associated_person=request.user, approved=False
+    )
     return render(request, "index.html", {"change_requests": pending_shift_change_requests})
 
 
@@ -112,10 +114,12 @@ def new_shift_change_request(request, shift_id):
             s.save()
             return HttpResponseRedirect(reverse("view_shift", args=(shift_id,)))
     else:
-        form = NewChangeRequestForm(initial={
-            "new_associated_person": shift.associated_person,
-            "new_start": shift.start,
-            "new_duration": shift.duration,
-            "new_location": shift.location,
-        })
+        form = NewChangeRequestForm(
+            initial={
+                "new_associated_person": shift.associated_person,
+                "new_start": shift.start,
+                "new_duration": shift.duration,
+                "new_location": shift.location,
+            }
+        )
         return render(request, "shifts/new_shift_change_request.html", {"shift_id": shift_id, "form": form})
