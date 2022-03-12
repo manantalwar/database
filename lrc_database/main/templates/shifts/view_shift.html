@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% comment %}
+This entire page is ugly and should be redone.
+{% endcomment %}
+
+{% block content %}
+    <ul>
+        <li><strong>Associated person:</strong> {{ shift.associated_person }}</li>
+        <li><strong>Start:</strong> {{ shift.start }}</li>
+        <li><strong>Duration:</strong> {{ shift.duration }}</li>
+        <li><strong>Location:</strong> {{ shift.location }}</li>
+    </ul>
+    <strong>Change requests:</strong>
+    {% if change_requests %}
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Reason</th>
+                    <th scope="col">Approved?</th>
+                    <th scope="col">Approved by</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for change_request in change_requests %}
+                    <tr>
+                        <td>{{ change_request.reason }}</td>
+                        <td>{{ change_request.approved }}</td>
+                        <td>{{ change_request.approved_by }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        None.
+    {% endif %}
+{% endblock %}

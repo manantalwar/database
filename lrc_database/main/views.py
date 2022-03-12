@@ -9,8 +9,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_list_or_404, get_object_or_404, render
 from django.urls import reverse
 
-from .forms import EditProfileForm
-from .models import Shift
+from .forms import EditProfileForm, NewChangeRequestForm
+from .models import Shift, ShiftChangeRequest
 
 User = get_user_model()
 log = logging.getLogger()
@@ -46,6 +46,7 @@ def user_profile(request, user_id):
             "end": (shift.start + shift.duration).isoformat(),
             "title": str(shift),
             "allDay": False,
+            "url": reverse("view_shift", args=(shift.id,)),
         }
         for shift in target_users_shifts
     ]
@@ -60,7 +61,7 @@ def edit_profile(request, user_id):
     if user_id != request.user.id:
         # TODO: let privileged users edit anyone's profile
         raise PermissionDenied
-    user = User.objects.get(pk=user_id)
+    user = get_object_or_404(User, pk=user_id)
     if request.method == "POST":
         form = EditProfileForm(request.POST)
         if form.is_valid():
@@ -78,3 +79,42 @@ def edit_profile(request, user_id):
 def list_users(request, group):
     users = get_list_or_404(User.objects.order_by("last_name"), groups__name=group)
     return render(request, "users/list_users.html", {"users": users, "group": group})
+
+
+@login_required
+def view_shift(request, shift_id):
+    shift = get_object_or_404(Shift, pk=shift_id)
+    change_requests = ShiftChangeRequest.objects.filter(target=shift)
+    return render(request, "shifts/view_shift.html", {"shift": shift, "change_requests": change_requests})
+
+
+@login_required
+def new_shift_change_request(request, shift_id):
+    shift = get_object_or_404(Shift, pk=shift_id)
+    if shift.associated_person.id != request.user.id:
+        # TODO: let privileged users edit anyone's shifts
+        raise PermissionDenied
+    if request.method == "POST":
+        form = NewChangeRequestForm(request.POST)
+        if form.is_valid():
+            s = ShiftChangeRequest(
+                target=shift,
+                reason=form.cleaned_data["reason"],
+                approved=False,
+                approved_by=None,
+                approved_on=None,
+                new_associated_person=form.cleaned_data["new_associated_person"],
+                new_start=form.cleaned_data["new_start"],
+                new_duration=form.cleaned_data["new_duration"],
+                new_location=form.cleaned_data["new_location"],
+            )
+            s.save()
+            return HttpResponseRedirect(reverse("view_shift", args=(shift_id,)))
+    else:
+        form = NewChangeRequestForm(initial={
+            "new_associated_person": shift.associated_person,
+            "new_start": shift.start,
+            "new_duration": shift.duration,
+            "new_location": shift.location,
+        })
+        return render(request, "shifts/new_shift_change_request.html", {"shift_id": shift_id, "form": form})
