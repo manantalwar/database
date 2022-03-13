@@ -17,9 +17,5 @@ This entire page is ugly and should be redone.
             <a href="{% url 'new_shift_change_request' shift.id %}">(add)</a>
         {% endif %}:
     </strong>
-    {% if change_requests %}
-        {% include "includes/shift_change_request_table.html" %}
-    {% else %}
-        None.
-    {% endif %}
+    {% include "includes/shift_change_request_table.html" %}
 {% endblock %}
