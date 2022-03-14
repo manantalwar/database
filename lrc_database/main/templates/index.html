@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <p>
-        <strong>Recent shift change requests:</strong>
-        {% include "includes/shift_change_request_table.html" %}
-    </p>
+    <div class="card">
+        <div class="card-header">Recent shift change requests</div>
+        <div class="card-body">
+            {% include "includes/shift_change_request_table.html" %}
+        </div>
+    </div>
 {% endblock %}

@@ -121,12 +121,16 @@ def all_of_day_in_month(year: int, month: int, weekday: int, hour: int):
     return ret
 
 
-def create_shifts(shift_count: int):
+def create_shifts():
     print("Creating shifts...")
     users = LRCDatabaseUser.objects.all()
     current_year = timezone.now().year
     current_month = timezone.now().month
     for user in users:
+        group = user.groups.first()
+        if not group or group.name not in ("SIs", "Tutors"):
+            continue
+        group = group.name
         location = get_random_location()
         weekday_1 = random.randint(0, 6)
         weekday_2 = random.randint(0, 6)
@@ -135,9 +139,15 @@ def create_shifts(shift_count: int):
         shift_times = all_of_day_in_month(current_year, current_month, weekday_1, hour_1) + all_of_day_in_month(
             current_year, current_month, weekday_2, hour_2
         )
+        print(group)
+        kind = "SI" if group == "SIs" else "Tutoring"
         for shift_time in shift_times:
             Shift.objects.create(
-                associated_person=user, location=location, start=shift_time, duration=timezone.timedelta(hours=1)
+                associated_person=user,
+                location=location,
+                start=shift_time,
+                duration=timezone.timedelta(hours=1),
+                kind=kind,
             )
 
 
@@ -190,10 +200,9 @@ class Command(BaseCommand):
         parser.add_argument("--superuser-username", default="admin", type=str)
         parser.add_argument("--superuser-password", default="admin", type=str)
         parser.add_argument("--superuser-email", default="admin@umass.edu", type=str)
-        parser.add_argument("--user-count", default=100, type=int)
-        parser.add_argument("--course-count", default=100, type=int)
+        parser.add_argument("--user-count", default=10, type=int)
+        parser.add_argument("--course-count", default=25, type=int)
         parser.add_argument("--courses-per-tutor", default=3, type=int)
-        parser.add_argument("--shift-count", default=100, type=int)
         parser.add_argument("--shift-change-request-count", default=100, type=int)
         parser.add_argument("--hardware-count", default=100, type=int)
 
@@ -210,5 +219,5 @@ class Command(BaseCommand):
         create_courses(options["course_count"])
         create_tutor_course_associations(options["courses_per_tutor"])
         create_si_course_associations()
-        create_shifts(options["shift_count"])
+        create_shifts()
         create_shift_change_requests(options["shift_change_request_count"])

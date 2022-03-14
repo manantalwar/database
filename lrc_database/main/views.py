@@ -10,7 +10,7 @@ from django.shortcuts import get_list_or_404, get_object_or_404, render
 from django.urls import reverse
 
 from .forms import EditProfileForm, NewChangeRequestForm
-from .models import Shift, ShiftChangeRequest
+from .models import Course, Shift, ShiftChangeRequest
 
 User = get_user_model()
 log = logging.getLogger()
@@ -123,3 +123,23 @@ def new_shift_change_request(request, shift_id):
             }
         )
         return render(request, "shifts/new_shift_change_request.html", {"shift_id": shift_id, "form": form})
+
+
+@login_required
+def list_courses(request):
+    courses = Course.objects.order_by("department", "number")
+    return render(request, "courses/list_courses.html", {"courses": courses})
+
+
+@login_required
+def view_course(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    tutors = User.objects.filter(courses_tutored__in=(course,))
+    sis = User.objects.filter(si_course=course)
+    return render(request, "courses/view_course.html", {"course": course, "tutors": tutors, "sis": sis})
+
+
+@restrict_to_groups("Office staff", "Supervisors")
+def view_shift_change_requests(request, kind):
+    requests = get_list_or_404(ShiftChangeRequest, target__kind=kind, approved=False)
+    return render(request, "scheduling/view_shift_change_requests.html", {"change_requests": requests, "kind": kind})

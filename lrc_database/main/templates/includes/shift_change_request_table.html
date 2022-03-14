@@ -3,7 +3,7 @@
         <tr>
             <th scope="col">Reason</th>
             <th scope="col">Approved?</th>
-            <th scope="col">Approved by</th>
+            <th scope="col">Approver</th>
         </tr>
     </thead>
     <tbody>
@@ -11,7 +11,13 @@
             <tr>
                 <td>{{ change_request.reason }}</td>
                 <td>{{ change_request.approved }}</td>
-                <td>{{ change_request.approved_by }}</td>
+                <td>
+                    {% if change_request.approved %}
+                        <a href="{% url 'user_profile' change_request.approved_by.id %}">{{ change_request.approved_by }}</a>
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
             </tr>
         {% empty %}
             <tr>

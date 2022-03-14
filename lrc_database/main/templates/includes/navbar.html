@@ -1,7 +1,7 @@
 {% load groups %}
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
         <a class="navbar-brand" href="{% url 'index' %}">LRC Staff Database</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-content"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -13,6 +13,18 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbar-account-dropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
+                            Alerts
+                            <span class="badge bg-secondary">{{ total_alert_count }}</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbar-account-dropdown">
+                            <li><h6 class="dropdown-header">Pending shift change requests</h6></li>
+                            <li><a class="dropdown-item" href="{% url 'view_shift_change_requests' 'SI' %}">SI requests <span class="badge bg-secondary">{{ pending_si_change_count }}</span></a></li>
+                            <li><a class="dropdown-item" href="{% url 'view_shift_change_requests' 'Tutoring' %}">Tutoring requests <span class="badge bg-secondary">{{ pending_tutoring_change_count }}</span></a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbar-account-dropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             Employees
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbar-account-dropdown">
@@ -21,6 +33,15 @@
                             <li><hr class="dropdown-divider" /></li>
                             <li><a class="dropdown-item" href="{% url 'list_users' 'Office staff' %}">Office staff</a></li>
                             <li><a class="dropdown-item" href="{% url 'list_users' 'Supervisors' %}">Supervisors</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbar-account-dropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Courses
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbar-account-dropdown">
+                            <li><a class="dropdown-item" href="{% url 'list_courses' %}">Course list</a></li>
                         </ul>
                     </li>
                 {% endif %}

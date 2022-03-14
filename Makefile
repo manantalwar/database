@@ -12,4 +12,4 @@ reset_database:
 	rm -f ./lrc_database/db.sqlite3
 	./lrc_database/manage.py makemigrations main
 	./lrc_database/manage.py migrate
-	./lrc_database/manage.py bootstrapdatabase --user-count=10
+	./lrc_database/manage.py bootstrapdatabase

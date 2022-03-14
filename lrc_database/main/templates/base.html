@@ -22,8 +22,8 @@
         {% endblock %}
     </head>
     <body>
+        {% include "includes/navbar.html" %}
         <div class="container" id="main-container">
-            {% include "includes/navbar.html" %}
             {% block content %}
                 <p>This is a template. You shouldn't be seeing this!</p>
             {% endblock %}

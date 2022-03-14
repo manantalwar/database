@@ -51,6 +51,9 @@ class Shift(models.Model):
         max_length=32,
         help_text="The location where the shift will be occur, e.g. GSMN 64.",
     )
+    kind = models.CharField(
+        max_length=8, choices=(("SI", "SI"), ("Tutoring", "Tutoring")), help_text="The kind of shift this is."
+    )
 
     def __str__(self):
         return f"{self.associated_person} in {self.location} at {self.start}"
