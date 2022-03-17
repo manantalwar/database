@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load groups static %}
+
+{% block extra_includes %}
+    <script>const events = JSON.parse("{{ target_users_shifts|escapejs }}");</script>
+    <script src="{% static 'js/calendar.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    {% comment %}
+        target_user is the user whose data is being displayed. user is the user
+        for the current session.
+    {% endcomment %}
+    <div class="row">
+        <h2>{{ target_user.first_name }} {{ target_user.last_name }}</h2>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-3">
+                <div class="card-header">Calendar</div>
+                <div class="card-body">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    Biography
+                    {% if user.id == target_user.id %}
+                        <a href="{% url 'edit_profile' user.id %}">(edit)</a>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><strong>Name:</strong> {{ target_user.first_name }} {{ target_user.last_name }}</p>
+                    <p class="card-text"><strong>Email:</strong> <a href="mailto:{{ target_user.email }}">{{ target_user.email }}</a></p>
+                    <p class="card-text"><strong>Groups:</strong> {{ target_user.groups.all|join:', '}}</p>
+                    {% if target_user|is_si %}
+                        <p class="card-text">
+                            <strong>SI course:</strong>
+                            <a href="{% url 'view_course' target_user.si_course.id %}">{{ target_user.si_course }}</a>
+                        </p>
+                    {% endif %}
+                    {% if target_user|is_tutor %}
+                        <p class="card-text">
+                            <strong>Tutored courses:</strong>
+                            {% if target_user.courses_tutored %}
+                                <ul>
+                                {% for course in target_user.courses_tutored.all %}
+                                    <li><a href="{% url 'view_course' course.id %}">{{ course }}</a></li>
+                                {% endfor %}
+                            {% else %}
+                                None.
+                            {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

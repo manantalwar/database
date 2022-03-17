@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% comment %}
+This entire page is ugly and should be redone.
+{% endcomment %}
+
+{% block content %}
+    <ul>
+        <li><strong>Associated person:</strong> {{ shift.associated_person }}</li>
+        <li><strong>Start:</strong> {{ shift.start }}</li>
+        <li><strong>Duration:</strong> {{ shift.duration }}</li>
+        <li><strong>Location:</strong> {{ shift.location }}</li>
+    </ul>
+    <strong>
+        Change requests
+        {% if user.id == shift.associated_person.id %}
+            <a href="{% url 'new_shift_change_request' shift.id %}">(add)</a>
+        {% endif %}:
+    </strong>
+    {% include "includes/shift_change_request_table.html" %}
+{% endblock %}
