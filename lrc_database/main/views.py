@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_list_or_404, get_object_or_404, render
 from django.urls import reverse
 
-from .forms import EditProfileForm, NewChangeRequestForm
+from .forms import CourseForm, EditProfileForm, NewChangeRequestForm
 from .models import Course, Shift, ShiftChangeRequest
 
 User = get_user_model()
@@ -101,15 +101,7 @@ def new_shift_change_request(request, shift_id):
         form = NewChangeRequestForm(request.POST)
         if form.is_valid():
             s = ShiftChangeRequest(
-                target=shift,
-                reason=form.cleaned_data["reason"],
-                approved=False,
-                approved_by=None,
-                approved_on=None,
-                new_associated_person=form.cleaned_data["new_associated_person"],
-                new_start=form.cleaned_data["new_start"],
-                new_duration=form.cleaned_data["new_duration"],
-                new_location=form.cleaned_data["new_location"],
+                target=shift, approved=False, approved_by=None, approved_on=None, **form.cleaned_data
             )
             s.save()
             return HttpResponseRedirect(reverse("view_shift", args=(shift_id,)))
@@ -137,6 +129,41 @@ def view_course(request, course_id):
     tutors = User.objects.filter(courses_tutored__in=(course,))
     sis = User.objects.filter(si_course=course)
     return render(request, "courses/view_course.html", {"course": course, "tutors": tutors, "sis": sis})
+
+
+@restrict_to_groups("Office staff", "Supervisors")
+def add_course(request):
+    if request.method == "POST":
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            c = Course(**form.cleaned_data)
+            c.save()
+            return HttpResponseRedirect(reverse("view_course", args=(c.id,)))
+    else:
+        form = CourseForm()
+        return render(request, "courses/add_course.html", {"form": form})
+
+
+@restrict_to_groups("Office staff", "Supervisors")
+def edit_course(request, course_id):
+    course = get_object_or_404(Course, pk=course_id)
+    if request.method == "POST":
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            course.department = form.cleaned_data["department"]
+            course.number = form.cleaned_data["number"]
+            course.name = form.cleaned_data["name"]
+            course.save()
+            return HttpResponseRedirect(reverse("view_course", args=(course.id,)))
+    else:
+        form = CourseForm(
+            initial={
+                "department": course.department,
+                "number": course.number,
+                "name": course.name,
+            }
+        )
+        return render(request, "courses/edit_course.html", {"form": form, "course_id": course.id})
 
 
 @restrict_to_groups("Office staff", "Supervisors")
