@@ -46,6 +46,7 @@ class NewLoanForm(forms.ModelForm):
         widget=forms.DateTimeInput(
             format="%d/%m/%Y %H:%M", attrs={"class": "form-control"}
         ),
+        help_text="DD/MM/YYYY HH:MM",
     )
     return_time = forms.DateTimeField(
         input_formats=["%d/%m/%Y %H:%M"],
@@ -53,6 +54,7 @@ class NewLoanForm(forms.ModelForm):
             format="%d/%m/%Y %H:%M", attrs={"class": "form-control"}
         ),
         required=False,
+        help_text="DD/MM/YYYY HH:MM",
     )
     target = forms.Select(attrs={"class": "form-control"})
     hardware_user = forms.Select(attrs={"class": "form-control"})

@@ -183,7 +183,7 @@ def show_hardware(request):
 
 # @restrict_to_groups("Office staff", "Supervisors")
 def show_loans(request):
-    loanInfo = Loan.objects.order_by("start_time")
+    loanInfo = Loan.objects.order_by("return_time")
 
     return render(request, "loans/showLoans.html", {"loanInfo": loanInfo})
 
@@ -254,5 +254,5 @@ def edit_hardware(request, hardware_id):
             return redirect("showHardware")
     else:
         form = AddHardwareForm(instance=hardware1)
-    context = {"form": form}
+    context = {"form": form, "hardware_id": hardware_id}
     return render(request, "hardware/editHardware.html", context)

@@ -19,7 +19,7 @@
     }
 </style>
 
-<form action="" method="POST" role="form">
+<form action="{% url 'editHardware' hardware_id %}" method="POST" role="form">
     {% csrf_token %}
     <div class="form-group">
         <div class="input-group">
