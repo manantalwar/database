@@ -240,20 +240,19 @@ def edit_loans(request, loan_id):
     else:
         form = NewLoanForm(instance=loan1)
 
-    return render(request, "loans/editLoans.html", {"form": form})
+    return render(request, "loans/editLoans.html", {"form": form, "loan_id": loan_id})
 
 
 # @restrict_to_groups("Office staff", "Supervisors")
 def edit_hardware(request, hardware_id):
     hardware1 = Hardware.objects.get(id=hardware_id)
     if request.method == "POST":
-        form = AddHardwareForm(instance=hardware1)
+        form = AddHardwareForm(request.POST, instance=hardware1)
         if form.is_valid():
             instance = form.save(commit=False)
             instance.save()
-
-        return HttpResponseRedirect(reverse("showHardware", args=(hardware_id,)))
+            return redirect("showHardware")
     else:
         form = AddHardwareForm(instance=hardware1)
     context = {"form": form}
-    return render(request, "hardware/showHardware.html", context)
+    return render(request, "hardware/editHardware.html", context)
