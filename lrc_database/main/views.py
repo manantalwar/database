@@ -170,7 +170,7 @@ def view_shift_change_requests(request, kind):
     )
 
 
-# @restrict_to_groups("Office staff", "Supervisors")
+@restrict_to_groups("Office staff", "Supervisors")
 def show_hardware(request):
     hardware = Hardware.objects.order_by("name")
     curLoans = Loan.objects.all()
@@ -181,14 +181,14 @@ def show_hardware(request):
     )
 
 
-# @restrict_to_groups("Office staff", "Supervisors")
+@restrict_to_groups("Office staff", "Supervisors")
 def show_loans(request):
     loanInfo = Loan.objects.order_by("return_time")
 
     return render(request, "loans/showLoans.html", {"loanInfo": loanInfo})
 
 
-# @restrict_to_groups("Office staff", "Supervisors")
+@restrict_to_groups("Office staff", "Supervisors")
 def add_hardware(request):
     if request.method == "POST":
         form = AddHardwareForm(request.POST)
@@ -202,7 +202,7 @@ def add_hardware(request):
     return render(request, "hardware/addHardware.html", context)
 
 
-# @restrict_to_groups("Office staff", "Supervisors")
+@restrict_to_groups("Office staff", "Supervisors")
 def add_loans(request):
     if request.method == "POST":
         form = NewLoanForm(request.POST)
@@ -216,20 +216,7 @@ def add_loans(request):
     return render(request, "loans/addLoans.html", context)
 
 
-# def edit_loans(request, loan_id):
-#     loan1 = Loan.objects.get(id=loan_id)
-#     form = NewLoanForm(request.POST, instance=loan1)
-#     if form.is_valid():
-#         instance = form.save(commit=False)
-#         instance.save()
-#         return HttpResponseRedirect(reverse("showLoans"))
-#     else:
-#         form = NewLoanForm(instance=loan1)
-#     context = {"form": form}
-#     return render(request, "loans/editLoans.html", context)
-
-
-# @restrict_to_groups("Office staff", "Supervisors")
+@restrict_to_groups("Office staff", "Supervisors")
 def edit_loans(request, loan_id):
     loan1 = Loan.objects.get(id=loan_id)
     if request.method == "POST":
@@ -243,7 +230,7 @@ def edit_loans(request, loan_id):
     return render(request, "loans/editLoans.html", {"form": form, "loan_id": loan_id})
 
 
-# @restrict_to_groups("Office staff", "Supervisors")
+@restrict_to_groups("Office staff", "Supervisors")
 def edit_hardware(request, hardware_id):
     hardware1 = Hardware.objects.get(id=hardware_id)
     if request.method == "POST":
