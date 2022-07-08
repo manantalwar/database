@@ -1,6 +1,13 @@
 from django import forms
 
-from .models import Hardware, Loan, LRCDatabaseUser, ShiftChangeRequest
+from .models import Course, Hardware, Loan, LRCDatabaseUser, ShiftChangeRequest
+
+
+class CourseForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = ("department", "number", "name")
+>>>>>>  master
 
 
 class EditProfileForm(forms.ModelForm):

@@ -1,5 +1,6 @@
 # Python
 **/__pycache__/
+poetry.lock
 
 # SQLite
 **/*.sqlite3
