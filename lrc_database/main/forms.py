@@ -1,6 +1,12 @@
 from django import forms
 
-from .models import LRCDatabaseUser, ShiftChangeRequest
+from .models import Course, LRCDatabaseUser, ShiftChangeRequest
+
+
+class CourseForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = ("department", "number", "name")
 
 
 class EditProfileForm(forms.ModelForm):
