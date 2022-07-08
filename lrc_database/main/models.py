@@ -121,7 +121,7 @@ class ShiftChangeRequest(models.Model):
 
 
 class Hardware(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, help_text="Hardware Name #123")
     is_available = models.BooleanField(default=True)
 
     def __str__(self):

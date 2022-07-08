@@ -185,7 +185,7 @@ def show_hardware(request):
 def show_loans(request):
     loanInfo = Loan.objects.order_by("return_time")
 
-    return render(request, "loans/showLoans.html", {"loanInfo": loanInfo})
+    return render(request, "loans/show_loans.html", {"loanInfo": loanInfo})
 
 
 @restrict_to_groups("Office staff", "Supervisors")
@@ -195,11 +195,11 @@ def add_hardware(request):
         if form.is_valid():
             instance = form.save(commit=False)
             instance.save()
-        return HttpResponseRedirect(reverse("showHardware"))
+        return HttpResponseRedirect(reverse("show_hardware"))
     else:
         form = AddHardwareForm()
         context = {"form": form}
-    return render(request, "hardware/addHardware.html", context)
+    return render(request, "hardware/add_hardware.html", context)
 
 
 @restrict_to_groups("Office staff", "Supervisors")
@@ -209,11 +209,11 @@ def add_loans(request):
         if form.is_valid():
             instance = form.save(commit=False)
             instance.save()
-            return HttpResponseRedirect(reverse("showLoans"))
+            return HttpResponseRedirect(reverse("show_loans"))
     else:
         form = NewLoanForm()
     context = {"form": form}
-    return render(request, "loans/addLoans.html", context)
+    return render(request, "loans/add_loans.html", context)
 
 
 @restrict_to_groups("Office staff", "Supervisors")
@@ -223,11 +223,11 @@ def edit_loans(request, loan_id):
         form = NewLoanForm(request.POST, instance=loan1)
         if form.is_valid():
             form.save()
-            return redirect("showLoans")
+            return redirect("show_loans")
     else:
         form = NewLoanForm(instance=loan1)
 
-    return render(request, "loans/editLoans.html", {"form": form, "loan_id": loan_id})
+    return render(request, "loans/edit_loans.html", {"form": form, "loan_id": loan_id})
 
 
 @restrict_to_groups("Office staff", "Supervisors")
@@ -238,8 +238,8 @@ def edit_hardware(request, hardware_id):
         if form.is_valid():
             instance = form.save(commit=False)
             instance.save()
-            return redirect("showHardware")
+            return redirect("show_hardware")
     else:
         form = AddHardwareForm(instance=hardware1)
     context = {"form": form, "hardware_id": hardware_id}
-    return render(request, "hardware/editHardware.html", context)
+    return render(request, "hardware/edit_hardware.html", context)

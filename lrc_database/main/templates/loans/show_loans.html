@@ -3,7 +3,7 @@
 {% block content %}
 <h2>LRC Loans</h2>
 <div class="add-btn">
-    <a href="/addLoans">
+    <a href="{% url 'add_loans' %}">
         <button type="button" class="btn btn-primary">
             Add New Loan
         </button>
@@ -33,7 +33,7 @@
                 {% endif %}
             </td>
             <td>
-                <a href="/editLoans/{{ loan.id }}"> edit </a>
+                <a href="{% url 'edit_loans' loan.id %}"> edit </a>
             </td>
         </tr>
         {% endfor %}

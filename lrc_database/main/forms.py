@@ -29,17 +29,6 @@ class AddHardwareForm(forms.ModelForm):
         widgets = {"name": forms.TextInput(attrs={"class": "form-control"})}
 
 
-# class NewLoanForm(forms.ModelForm):
-#     class Meta:
-#         model = Loan
-#         fields = ("target", "hardware_user", "start_time", "return_time")
-
-#         widgets = {
-#             "target": forms.Select(attrs={"class": "form-control"}),
-#             "hardware_user": forms.Select(attrs={"class": "form-control"}),
-#             "start_time": forms.DateField(),
-#             "return_time": forms.DateField(),
-#         }
 class NewLoanForm(forms.ModelForm):
     start_time = forms.DateTimeField(
         input_formats=["%d/%m/%Y %H:%M"],

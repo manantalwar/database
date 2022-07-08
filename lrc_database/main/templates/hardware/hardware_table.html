@@ -3,7 +3,7 @@
 {% block content %}
 <h2>LRC Hardware</h2>
 <div class="add-btn">
-    <a href="{% url 'addHardware' %}">
+    <a href="{% url 'add_hardware' %}">
         <button type="button" class="btn btn-primary">
             Add New Hardware
         </button>
@@ -29,7 +29,8 @@
                 {% endif %}
             </td>
             <td>
-                <a href="/editHardware/{{ hardware_item.id }}"> edit </a>
+                <!-- <a href="/editHardware/{{ hardware_item.id }}"> edit </a> -->
+                <a href="{% url 'edit_hardware' hardware_item.id %}"> edit </a>
             </td>
         </tr>
         {% endfor %}
