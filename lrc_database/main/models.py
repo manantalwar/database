@@ -22,7 +22,7 @@ class Course(models.Model):
 
 
 class LRCDatabaseUser(AbstractUser):
-    courses_tutored = models.ManyToManyField(Course)
+    courses_tutored = models.ManyToManyField(Course, blank=True, default=None)
     si_course = models.ForeignKey(
         to=Course,
         on_delete=models.SET_NULL,
@@ -30,6 +30,7 @@ class LRCDatabaseUser(AbstractUser):
         null=True,
         default=None,
         related_name="lrc_database_user_si_course",
+        verbose_name="SI course",
     )
 
     def __str__(self):

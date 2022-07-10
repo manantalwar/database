@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h2>Create users in bulk</h2>
+    <p>
+        Write user data into the text area below. For each user you wish to add, add a single line with the following values in order and separated by commas.
+        <ul>
+            <li>a username, like "jshmoe"</li>
+            <li>an email address, like "jshmoe@umass.edu"</li>
+            <li>a first name, like "Joe"</li>
+            <li>a last name, like "Shmoe"</li>
+            <li>a primary group, which must be one of "Tutors", "SIs", "Office staff", or "Supervisors" (mind the capitalization!)</li>
+            <li>a password, like "2@COBaqfVfBU9N^L1O36@G$z"</li>
+        </ul>
+        so the full line would be something like <code>jshmoe,jshmoe@umass.edu,Joe,Shmoe,SIs,2@COBaqfVfBU9N^L1O36@G$z</code>.
+    </p>
+    <p>You can export large numbers of lines like this easily from programs like Excel by looking for an "export to CSV" (<a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">comma-separated values</a>) or similar option.</p>
+    <hr />
+    <form method="post" action="{% url 'create_users_in_bulk' %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" value="Create users">
+    </form>
+{% endblock %}
