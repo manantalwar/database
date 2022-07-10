@@ -24,6 +24,7 @@ DEPARTMENTS = (
     "NUTRITN",
     "STATISTC",
 )
+
 LOCATIONS = ("ELAB", "HAS", "ILC", "LGRC", "MOR3", "TOTM")
 
 
@@ -45,12 +46,30 @@ def create_superuser(username: str, password: str, email: str):
 
 def create_special_users():
     print("Creating special users...")
-    User.objects.create_user(username="si", password="password", first_name="Test SI", last_name="user")
-    User.objects.create_user(username="tutor", password="password", first_name="Test Tutor", last_name="user")
     User.objects.create_user(
-        username="office_staff", password="password", first_name="Test Office Staff", last_name="user"
+        username="si",
+        password="password",
+        first_name="Test SI",
+        last_name="user",
     )
-    User.objects.create_user(username="supervisor", password="password", first_name="Test Supervisor", last_name="user")
+    User.objects.create_user(
+        username="tutor",
+        password="password",
+        first_name="Test Tutor",
+        last_name="user",
+    )
+    User.objects.create_user(
+        username="office_staff",
+        password="password",
+        first_name="Test Office Staff",
+        last_name="user",
+    )
+    User.objects.create_user(
+        username="supervisor",
+        password="password",
+        first_name="Test Supervisor",
+        last_name="user",
+    )
 
 
 def create_other_users(user_count: int):
@@ -178,7 +197,12 @@ def create_shift_change_requests(request_count: int):
 
 def create_hardware(hardware_count: int):
     print("Creating hardware...")
-    HARDWARE_TYPES = ("Projector", "Calculator", "Laptop", "Power adapter")
+    HARDWARE_TYPES = (
+        "Projector",
+        "Calculator",
+        "Laptop",
+        "Power adapter",
+    )
     hardware_counts: DefaultDict[str, int] = defaultdict(int)
     for _ in range(hardware_count):
         hw_type = random.choice(HARDWARE_TYPES)

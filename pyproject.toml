@@ -1,3 +1,38 @@
+#############
+### BLACK ###
+#############
+
+[tool.black]
+line-length = 120
+
+#############
+### ISORT ###
+#############
+
+[tool.isort]
+line_length = 120
+profile = "black"
+skip_glob = "lrc_database/main/migrations/*"
+
+############
+### MYPY ###
+############
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+strict_optional = true
+
+[tool.django-stubs]
+django_settings_module = "lrc_database.settings"
+
+[[tool.mypy.overrides]]
+module = "lrc_database.main.migrations"
+ignore_errors = true
+
+##############
+### POETRY ###
+##############
+
 [tool.poetry]
 name = "lrc-database"
 version = "0.1.0"

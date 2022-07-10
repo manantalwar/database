@@ -4,21 +4,42 @@ jobs:
   checks:
     runs-on: ubuntu-latest
     steps:
+
     - uses: actions/checkout@v2
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: "3.10"
+
+    - name: Load cached Poetry installation
+      uses: actions/cache@v2
+      with:
+        path: ~/.local
+        key: poetry-installation-${{ hashFiles('.github/workflows/automated_checks.yml') }}
+
     - name: Install Poetry
       uses: snok/install-poetry@v1
+      with:
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+
+    - name: Load cached dependencies
+      id: load-cached-dependencies
+      uses: actions/cache@v2
+      with:
+        path: .venv
+        key: dependencies-${{ hashFiles('pyproject.toml') }}
+
     - name: Install dependencies
       run: poetry install --no-interaction --no-root
+      if: steps.load-cached-dependencies.cache-hit != 'true'
+
     - name: Run unit tests
       run: poetry run python lrc_database/manage.py test
-    - name: Check code style
-      run: poetry run flake8 lrc_database
-    - name: Check typing
-      run: poetry run mypy . --config ../setup.cfg
-      working-directory: ./lrc_database
-    - name: Check import orders
-      run: poetry run isort lrc_database --check --diff
+
+    - name: Check formatting
+      run: poetry run make check_formatting
+
+    - name: Check code
+      run: poetry run make check_code

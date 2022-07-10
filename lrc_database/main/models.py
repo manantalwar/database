@@ -4,7 +4,10 @@ from django.db import models
 
 
 class Course(models.Model):
-    department = models.CharField(max_length=16, help_text="Department string, like COMPSCI or MATH.")
+    department = models.CharField(
+        max_length=16,
+        help_text="Department string, like COMPSCI or MATH.",
+    )
     number = models.IntegerField(
         validators=[
             validators.MinValueValidator(100),
@@ -52,7 +55,9 @@ class Shift(models.Model):
         help_text="The location where the shift will be occur, e.g. GSMN 64.",
     )
     kind = models.CharField(
-        max_length=8, choices=(("SI", "SI"), ("Tutoring", "Tutoring")), help_text="The kind of shift this is."
+        max_length=8,
+        choices=(("SI", "SI"), ("Tutoring", "Tutoring")),
+        help_text="The kind of shift this is.",
     )
 
     def __str__(self):
@@ -66,8 +71,14 @@ class ShiftChangeRequest(models.Model):
         on_delete=models.CASCADE,
         help_text="Shift to edit.",
     )
-    reason = models.CharField(max_length=512, help_text="Explanation for why this change is being requested.")
-    approved = models.BooleanField(default=False, help_text="Whether the request is approved or not.")
+    reason = models.CharField(
+        max_length=512,
+        help_text="Explanation for why this change is being requested.",
+    )
+    approved = models.BooleanField(
+        default=False,
+        help_text="Whether the request is approved or not.",
+    )
     approved_by = models.ForeignKey(
         to=LRCDatabaseUser,
         related_name="shift_change_request_approved_by",
@@ -77,7 +88,12 @@ class ShiftChangeRequest(models.Model):
         on_delete=models.CASCADE,
         help_text="The user (if any) who approved the change request.",
     )
-    approved_on = models.DateTimeField(help_text="When the request was approved.", blank=True, null=True, default=None)
+    approved_on = models.DateTimeField(
+        help_text="When the request was approved.",
+        blank=True,
+        null=True,
+        default=None,
+    )
 
     new_associated_person = models.ForeignKey(
         to=LRCDatabaseUser,
@@ -109,6 +125,9 @@ class ShiftChangeRequest(models.Model):
 
 
 class Hardware(models.Model):
+    class Meta:
+        verbose_name_plural = "hardware"
+
     name = models.CharField(max_length=200)
     is_available = models.BooleanField(default=True)
 
@@ -125,7 +144,9 @@ class Loan(models.Model):
     )
 
     hardware_user = models.ForeignKey(
-        to=LRCDatabaseUser, on_delete=models.CASCADE, help_text="The LRC user borrowing the hardware"
+        to=LRCDatabaseUser,
+        on_delete=models.CASCADE,
+        help_text="The LRC user borrowing the hardware",
     )
 
     start_time = models.DateTimeField()
