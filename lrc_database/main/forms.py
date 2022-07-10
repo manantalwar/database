@@ -1,7 +1,13 @@
 from django import forms
 from django.contrib.auth.models import Group
 
-from .models import LRCDatabaseUser, ShiftChangeRequest
+from .models import Course, LRCDatabaseUser, ShiftChangeRequest
+
+
+class CourseForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = ("department", "number", "name")
 
 
 class CreateUserForm(forms.ModelForm):

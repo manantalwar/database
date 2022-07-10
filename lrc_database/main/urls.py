@@ -7,6 +7,8 @@ urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
     path("courses/", views.list_courses, name="list_courses"),
     path("courses/<int:course_id>", views.view_course, name="view_course"),
+    path("courses/<int:course_id>/edit", views.edit_course, name="edit_course"),
+    path("courses/add", views.add_course, name="add_course"),
     path(
         "scheduling/shift_change_requests/<str:kind>",
         views.view_shift_change_requests,
