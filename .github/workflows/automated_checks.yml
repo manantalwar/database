@@ -13,7 +13,7 @@ jobs:
         python-version: "3.10"
 
     - name: Load cached Poetry installation
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.local
         key: poetry-installation-${{ hashFiles('.github/workflows/automated_checks.yml') }}
@@ -26,7 +26,7 @@ jobs:
 
     - name: Load cached dependencies
       id: load-cached-dependencies
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: .venv
         key: dependencies-${{ hashFiles('pyproject.toml') }}
