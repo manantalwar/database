@@ -7,11 +7,19 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_list_or_404, get_object_or_404, render
+from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
 from django.urls import reverse
 
-from .forms import CourseForm, CreateUserForm, CreateUsersInBulkForm, EditProfileForm, NewChangeRequestForm
-from .models import Course, LRCDatabaseUser, Shift, ShiftChangeRequest
+from .forms import (
+    AddHardwareForm,
+    CourseForm,
+    CreateUserForm,
+    CreateUsersInBulkForm,
+    EditProfileForm,
+    NewChangeRequestForm,
+    NewLoanForm,
+)
+from .models import Course, Hardware, Loan, LRCDatabaseUser, Shift, ShiftChangeRequest
 
 User = get_user_model()
 log = logging.getLogger()
@@ -56,7 +64,9 @@ def user_profile(request, user_id):
     ]
     target_users_shifts = json.dumps(target_users_shifts)
     return render(
-        request, "users/user_profile.html", {"target_user": target_user, "target_users_shifts": target_users_shifts}
+        request,
+        "users/user_profile.html",
+        {"target_user": target_user, "target_users_shifts": target_users_shifts},
     )
 
 
@@ -132,7 +142,11 @@ def list_users(request, group):
 def view_shift(request, shift_id):
     shift = get_object_or_404(Shift, pk=shift_id)
     change_requests = ShiftChangeRequest.objects.filter(target=shift)
-    return render(request, "shifts/view_shift.html", {"shift": shift, "change_requests": change_requests})
+    return render(
+        request,
+        "shifts/view_shift.html",
+        {"shift": shift, "change_requests": change_requests},
+    )
 
 
 @login_required
@@ -158,7 +172,11 @@ def new_shift_change_request(request, shift_id):
                 "new_location": shift.location,
             }
         )
-        return render(request, "shifts/new_shift_change_request.html", {"shift_id": shift_id, "form": form})
+        return render(
+            request,
+            "shifts/new_shift_change_request.html",
+            {"shift_id": shift_id, "form": form},
+        )
 
 
 @login_required
@@ -172,7 +190,11 @@ def view_course(request, course_id):
     course = get_object_or_404(Course, id=course_id)
     tutors = User.objects.filter(courses_tutored__in=(course,))
     sis = User.objects.filter(si_course=course)
-    return render(request, "courses/view_course.html", {"course": course, "tutors": tutors, "sis": sis})
+    return render(
+        request,
+        "courses/view_course.html",
+        {"course": course, "tutors": tutors, "sis": sis},
+    )
 
 
 @restrict_to_groups("Office staff", "Supervisors")
@@ -213,4 +235,83 @@ def edit_course(request, course_id):
 @restrict_to_groups("Office staff", "Supervisors")
 def view_shift_change_requests(request, kind):
     requests = get_list_or_404(ShiftChangeRequest, target__kind=kind, approved=False)
-    return render(request, "scheduling/view_shift_change_requests.html", {"change_requests": requests, "kind": kind})
+    return render(
+        request,
+        "scheduling/view_shift_change_requests.html",
+        {"change_requests": requests, "kind": kind},
+    )
+
+
+@restrict_to_groups("Office staff", "Supervisors")
+def show_hardware(request):
+    hardware = Hardware.objects.order_by("name")
+    curLoans = Loan.objects.all()
+    return render(
+        request,
+        "hardware/hardware_table.html",
+        {"hardware": hardware, "curLoans": curLoans},
+    )
+
+
+@restrict_to_groups("Office staff", "Supervisors")
+def show_loans(request):
+    loanInfo = Loan.objects.order_by("return_time")
+
+    return render(request, "loans/show_loans.html", {"loanInfo": loanInfo})
+
+
+@restrict_to_groups("Office staff", "Supervisors")
+def add_hardware(request):
+    if request.method == "POST":
+        form = AddHardwareForm(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.save()
+        return HttpResponseRedirect(reverse("show_hardware"))
+    else:
+        form = AddHardwareForm()
+        context = {"form": form}
+    return render(request, "hardware/add_hardware.html", context)
+
+
+@restrict_to_groups("Office staff", "Supervisors")
+def add_loans(request):
+    if request.method == "POST":
+        form = NewLoanForm(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.save()
+            return HttpResponseRedirect(reverse("show_loans"))
+    else:
+        form = NewLoanForm()
+    context = {"form": form}
+    return render(request, "loans/add_loans.html", context)
+
+
+@restrict_to_groups("Office staff", "Supervisors")
+def edit_loans(request, loan_id):
+    loan1 = Loan.objects.get(id=loan_id)
+    if request.method == "POST":
+        form = NewLoanForm(request.POST, instance=loan1)
+        if form.is_valid():
+            form.save()
+            return redirect("show_loans")
+    else:
+        form = NewLoanForm(instance=loan1)
+
+    return render(request, "loans/edit_loans.html", {"form": form, "loan_id": loan_id})
+
+
+@restrict_to_groups("Office staff", "Supervisors")
+def edit_hardware(request, hardware_id):
+    hardware1 = Hardware.objects.get(id=hardware_id)
+    if request.method == "POST":
+        form = AddHardwareForm(request.POST, instance=hardware1)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.save()
+            return redirect("show_hardware")
+    else:
+        form = AddHardwareForm(instance=hardware1)
+    context = {"form": form, "hardware_id": hardware_id}
+    return render(request, "hardware/edit_hardware.html", context)
