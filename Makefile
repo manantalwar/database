@@ -1,10 +1,30 @@
-format:
-	isort lrc_database
-	black lrc_database --line-length 120
+run:
+	docker-compose up
 
-check:
-	flake8 lrc_database
-	cd ./lrc_database && mypy . --config ../setup.cfg
+check_black:
+	black lrc_database --check
+
+check_isort:
+	isort lrc_database --check --diff
+
+check_mypy:
+	cd ./lrc_database && mypy . --config ../pyproject.toml
+
+check_code: check_mypy
+
+check_formatting: check_black check_isort
+
+check: check_code check_formatting
+
+# isort must come before black because it might change the order of imports,
+# while black never will.
+format_black: format_isort
+	black lrc_database
+
+format_isort:
+	isort lrc_database
+
+format: format_black format_isort
 
 reset_database:
 	rm -rf ./lrc_database/main/migrations/*.py
@@ -13,3 +33,5 @@ reset_database:
 	./lrc_database/manage.py makemigrations main
 	./lrc_database/manage.py migrate
 	./lrc_database/manage.py bootstrapdatabase
+
+.PHONY: *

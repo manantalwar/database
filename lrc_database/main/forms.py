@@ -18,4 +18,10 @@ class EditProfileForm(forms.ModelForm):
 class NewChangeRequestForm(forms.ModelForm):
     class Meta:
         model = ShiftChangeRequest
-        fields = ("reason", "new_associated_person", "new_start", "new_duration", "new_location")
+        fields = (
+            "reason",
+            "new_associated_person",
+            "new_start",
+            "new_duration",
+            "new_location",
+        )
