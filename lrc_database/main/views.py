@@ -9,10 +9,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
 from django.urls import reverse
 
-
 from .forms import AddHardwareForm, CourseForm, EditProfileForm, NewChangeRequestForm, NewLoanForm
 from .models import Course, Hardware, Loan, Shift, ShiftChangeRequest
-
 
 User = get_user_model()
 log = logging.getLogger()
