@@ -18,5 +18,7 @@ urlpatterns = [
     path("shifts/<int:shift_id>/request_change", views.new_shift_change_request, name="new_shift_change_request"),
     path("users/<int:user_id>", views.user_profile, name="user_profile"),
     path("users/<int:user_id>/edit", views.edit_profile, name="edit_profile"),
-    path("users/<str:group>", views.list_users, name="list_users"),
+    path("users/create", views.create_user, name="create_user"),
+    path("users/create/bulk", views.create_users_in_bulk, name="create_users_in_bulk"),
+    path("users/groups/<str:group>", views.list_users, name="list_users"),
 ]
