@@ -32,16 +32,12 @@ class AddHardwareForm(forms.ModelForm):
 class NewLoanForm(forms.ModelForm):
     start_time = forms.DateTimeField(
         input_formats=["%d/%m/%Y %H:%M"],
-        widget=forms.DateTimeInput(
-            format="%d/%m/%Y %H:%M", attrs={"class": "form-control"}
-        ),
+        widget=forms.DateTimeInput(format="%d/%m/%Y %H:%M", attrs={"class": "form-control"}),
         help_text="DD/MM/YYYY HH:MM",
     )
     return_time = forms.DateTimeField(
         input_formats=["%d/%m/%Y %H:%M"],
-        widget=forms.DateTimeInput(
-            format="%d/%m/%Y %H:%M", attrs={"class": "form-control"}
-        ),
+        widget=forms.DateTimeInput(format="%d/%m/%Y %H:%M", attrs={"class": "form-control"}),
         required=False,
         help_text="DD/MM/YYYY HH:MM",
     )

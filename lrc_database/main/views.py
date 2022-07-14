@@ -21,10 +21,7 @@ def restrict_to_groups(*groups):
         def _wrapped_view(request, *args, **kwargs):
             if not request.user.is_authenticated:
                 return redirect_to_login(request.get_full_path())
-            if (
-                request.user.is_superuser
-                or request.user.groups.filter(name__in=groups).exists()
-            ):
+            if request.user.is_superuser or request.user.groups.filter(name__in=groups).exists():
                 return view(request, *args, **kwargs)
             raise PermissionDenied
 
@@ -38,9 +35,7 @@ def index(request):
     pending_shift_change_requests = ShiftChangeRequest.objects.filter(
         target__associated_person=request.user, approved=False
     )
-    return render(
-        request, "index.html", {"change_requests": pending_shift_change_requests}
-    )
+    return render(request, "index.html", {"change_requests": pending_shift_change_requests})
 
 
 @login_required
@@ -82,9 +77,7 @@ def edit_profile(request, user_id):
             return HttpResponseRedirect(reverse("user_profile", args=(user_id,)))
     else:
         form = EditProfileForm(instance=user)
-        return render(
-            request, "users/edit_profile.html", {"user_id": user_id, "form": form}
-        )
+        return render(request, "users/edit_profile.html", {"user_id": user_id, "form": form})
 
 
 @restrict_to_groups("Office staff", "Supervisors")
