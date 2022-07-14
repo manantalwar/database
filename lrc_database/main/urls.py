@@ -29,4 +29,7 @@ urlpatterns = [
     path("edit_hardware/<int:hardware_id>", views.edit_hardware, name="edit_hardware"),
     path("add_hardware", views.add_hardware, name="add_hardware"),
     path("add_loans", views.add_loans, name="add_loans"),
+    path("users/create", views.create_user, name="create_user"),
+    path("users/create/bulk", views.create_users_in_bulk, name="create_users_in_bulk"),
+    path("users/groups/<str:group>", views.list_users, name="list_users"),
 ]

@@ -4,7 +4,10 @@ from django.db import models
 
 
 class Course(models.Model):
-    department = models.CharField(max_length=16, help_text="Department string, like COMPSCI or MATH.")
+    department = models.CharField(
+        max_length=16,
+        help_text="Department string, like COMPSCI or MATH.",
+    )
     number = models.IntegerField(
         validators=[
             validators.MinValueValidator(100),
@@ -22,7 +25,7 @@ class Course(models.Model):
 
 
 class LRCDatabaseUser(AbstractUser):
-    courses_tutored = models.ManyToManyField(Course)
+    courses_tutored = models.ManyToManyField(Course, blank=True, default=None)
     si_course = models.ForeignKey(
         to=Course,
         on_delete=models.SET_NULL,
@@ -30,6 +33,7 @@ class LRCDatabaseUser(AbstractUser):
         null=True,
         default=None,
         related_name="lrc_database_user_si_course",
+        verbose_name="SI course",
     )
 
     def __str__(self):
@@ -68,8 +72,14 @@ class ShiftChangeRequest(models.Model):
         on_delete=models.CASCADE,
         help_text="Shift to edit.",
     )
-    reason = models.CharField(max_length=512, help_text="Explanation for why this change is being requested.")
-    approved = models.BooleanField(default=False, help_text="Whether the request is approved or not.")
+    reason = models.CharField(
+        max_length=512,
+        help_text="Explanation for why this change is being requested.",
+    )
+    approved = models.BooleanField(
+        default=False,
+        help_text="Whether the request is approved or not.",
+    )
     approved_by = models.ForeignKey(
         to=LRCDatabaseUser,
         related_name="shift_change_request_approved_by",
@@ -79,7 +89,12 @@ class ShiftChangeRequest(models.Model):
         on_delete=models.CASCADE,
         help_text="The user (if any) who approved the change request.",
     )
-    approved_on = models.DateTimeField(help_text="When the request was approved.", blank=True, null=True, default=None)
+    approved_on = models.DateTimeField(
+        help_text="When the request was approved.",
+        blank=True,
+        null=True,
+        default=None,
+    )
 
     new_associated_person = models.ForeignKey(
         to=LRCDatabaseUser,
@@ -111,7 +126,10 @@ class ShiftChangeRequest(models.Model):
 
 
 class Hardware(models.Model):
-    name = models.CharField(max_length=200, help_text="Hardware Name #123")
+    class Meta:
+        verbose_name_plural = "hardware"
+
+    name = models.CharField(max_length=200)
     is_available = models.BooleanField(default=True)
 
     def __str__(self):

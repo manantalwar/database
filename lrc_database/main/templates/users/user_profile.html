@@ -38,7 +38,11 @@
                     {% if target_user|is_si %}
                         <p class="card-text">
                             <strong>SI course:</strong>
-                            <a href="{% url 'view_course' target_user.si_course.id %}">{{ target_user.si_course }}</a>
+                            {% if target_user.si_course %}
+                                <a href="{% url 'view_course' target_user.si_course.id %}">{{ target_user.si_course }}</a>
+                            {% else %}
+                                None
+                            {% endif %}
                         </p>
                     {% endif %}
                     {% if target_user|is_tutor %}

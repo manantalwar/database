@@ -3,14 +3,22 @@ import logging
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
 from django.urls import reverse
 
+<<<<<<< HEAD
 from .forms import AddHardwareForm, CourseForm, EditProfileForm, NewChangeRequestForm, NewLoanForm
 from .models import Course, Hardware, Loan, Shift, ShiftChangeRequest
+
+=======
+from .forms import CourseForm, CreateUserForm, CreateUsersInBulkForm, EditProfileForm, NewChangeRequestForm
+from .models import Course, LRCDatabaseUser, Shift, ShiftChangeRequest
+
+>>>>>>> 9ab9322bab57937ba060963e27a94965032fbcd5
 
 User = get_user_model()
 log = logging.getLogger()
@@ -81,8 +89,51 @@ def edit_profile(request, user_id):
 
 
 @restrict_to_groups("Office staff", "Supervisors")
+def create_user(request):
+    if request.method == "POST":
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            user = LRCDatabaseUser.objects.create_user(
+                username=form.cleaned_data["username"],
+                email=form.cleaned_data["email"],
+                first_name=form.cleaned_data["first_name"],
+                last_name=form.cleaned_data["last_name"],
+                password=form.cleaned_data["password"],
+                si_course=form.cleaned_data["si_course"],
+            )
+            user.courses_tutored.set(form.cleaned_data["courses_tutored"])
+            user.save()
+            for group in form.cleaned_data["groups"]:
+                group.user_set.add(user)
+            return HttpResponseRedirect(reverse("user_profile", args=(user.id,)))
+    else:
+        form = CreateUserForm()
+        return render(request, "users/create_user.html", {"form": form})
+
+
+@restrict_to_groups("Office staff", "Supervisors")
+def create_users_in_bulk(request):
+    if request.method == "POST":
+        form = CreateUsersInBulkForm(request.POST)
+        assert form.is_valid()
+        user_data = form.cleaned_data["user_data"]
+        user_data = user_data.split("\n")
+        user_data = [s.strip() for s in user_data]
+        user_data = [s.split(",") for s in user_data]
+        for username, email, first_name, last_name, primary_group, password in user_data:
+            user = LRCDatabaseUser.objects.create_user(
+                username=username, email=email, first_name=first_name, last_name=last_name, password=password
+            )
+            Group.objects.filter(name=primary_group).first().user_set.add(user)
+        return HttpResponseRedirect(reverse("index"))
+    else:
+        form = CreateUsersInBulkForm()
+        return render(request, "users/create_users_in_bulk.html", {"form": form})
+
+
+@restrict_to_groups("Office staff", "Supervisors")
 def list_users(request, group):
-    users = get_list_or_404(User.objects.order_by("last_name"), groups__name=group)
+    users = get_list_or_404(User.objects.filter(is_retired=False).order_by("last_name"), groups__name=group)
     return render(request, "users/list_users.html", {"users": users, "group": group})
 
 
