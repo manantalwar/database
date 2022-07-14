@@ -10,15 +10,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
 from django.urls import reverse
 
-<<<<<<< HEAD
-from .forms import AddHardwareForm, CourseForm, EditProfileForm, NewChangeRequestForm, NewLoanForm
-from .models import Course, Hardware, Loan, Shift, ShiftChangeRequest
-
-=======
-from .forms import CourseForm, CreateUserForm, CreateUsersInBulkForm, EditProfileForm, NewChangeRequestForm
-from .models import Course, LRCDatabaseUser, Shift, ShiftChangeRequest
-
->>>>>>> 9ab9322bab57937ba060963e27a94965032fbcd5
+from .forms import AddHardwareForm, CourseForm, CreateUserForm, CreateUsersInBulkForm, EditProfileForm, NewChangeRequestForm, NewLoanForm
+from .models import Course, Hardware, Loan, LRCDatabaseUser, Shift, ShiftChangeRequest
 
 User = get_user_model()
 log = logging.getLogger()
