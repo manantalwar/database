@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "lrc-database"
+version = "0.1.0"
+description = "Session scheduling program for peer tutors and SI leaders (and some other things)"
+authors = ["Simon Andrews <sbandrews@umass.edu>", "Lily Rosenbaum <lrosenbaum@umass.edu>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+crispy-bootstrap5 = "^0.6"
+django = "^4.0.5"
+django-crispy-forms = "^1.14.0"
+gunicorn = "^20.1.0"
+pytz = "^2022.1"
+
+[tool.poetry.dev-dependencies]
+black = "^22.3.0"
+django-stubs = "^1.12.0"
+faker = "^13.14.0"
+flake8 = "^4.0.1"
+mypy = "^0.961"
+isort = "^5.10.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
