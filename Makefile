@@ -1,5 +1,8 @@
 run:
-	docker-compose up
+	LRC_DATABASE_SECRET_KEY=abc123 LRC_DATABASE_DEBUG=1 ./lrc_database/manage.py runserver
+
+check_bandit:
+	bandit lrc_database --recursive --configfile pyproject.toml
 
 check_black:
 	black lrc_database --check
@@ -10,7 +13,7 @@ check_isort:
 check_mypy:
 	cd ./lrc_database && mypy . --config ../pyproject.toml
 
-check_code: check_mypy
+check_code: check_bandit check_mypy
 
 check_formatting: check_black check_isort
 

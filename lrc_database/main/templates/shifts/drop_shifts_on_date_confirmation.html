@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <p>Are you sure that you want to delete the following shifts?</p>
+    <p>It may result in permanent data loss. Please be careful!</p>
+    <ul>
+        {% for shift in affected_shifts %}
+            <li>{{ shift }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'drop_shifts_on_date_confirmation' %}" type="button" class="btn btn-danger">I'm sure</a>
+    <a href="{% url 'index' %}" type="button" class="btn btn-primary">Get me out of here!</a>
+{% endblock %}

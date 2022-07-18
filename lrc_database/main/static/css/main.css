@@ -5,4 +5,6 @@ body {
 #main-container {
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.5) 0px 15px 30px;
+  padding-top: 12px;
+  padding-bottom: 12px;
 }

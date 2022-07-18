@@ -1,0 +1,13 @@
+name: Build Docker images
+on:
+  push:
+    paths: ["**/Dockerfile", "docker-compose.yml"]
+jobs:  
+  build-docker-images:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Build images
+      run: docker-compose build

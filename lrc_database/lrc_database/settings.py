@@ -10,23 +10,23 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 from typing import List
+
+from django.contrib import messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-l3#c4^#nin@0!h1xfbo=0$mn#6ix_x9l0u+i0z#lo34=mfs9q9"
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = os.getenv("LRC_DATABASE_SECRET_KEY")
 
 ALLOWED_HOSTS: List[str] = []
+
+DEBUG = os.getenv("LRC_DATABASE_DEBUG") == "1"
 
 
 # Application definition
@@ -143,3 +143,21 @@ LOGOUT_REDIRECT_URL = "index"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+
+# Messages
+
+MESSAGE_TAGS = {
+    messages.DEBUG: "primary",
+    messages.INFO: "info",
+    messages.SUCCESS: "success",
+    messages.WARNING: "warning",
+    messages.ERROR: "danger",
+}
+"""
+Relevant documentation:
+ - Bootstrap classes: https://getbootstrap.com/docs/5.0/components/alerts/
+ - Message levels: https://docs.djangoproject.com/en/4.0/ref/settings/#message-tags
+
+Also see the messages.html template.
+"""
