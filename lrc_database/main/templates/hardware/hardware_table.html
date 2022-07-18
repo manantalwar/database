@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>LRC Hardware</h2>
+<div class="add-btn">
+    <a href="{% url 'add_hardware' %}">
+        <button type="button" class="btn btn-primary">
+            Add New Hardware
+        </button>
+    </a>
+</div>
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Hardware</th>
+            <th>Availability</th>
+            <th> </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for hardware_item in hardware %}
+        <tr>
+            <td>{{ hardware_item.name }}</td>
+            <td>
+                {% if hardware_item.is_available %}
+                Available &#9745;
+                {% else %}
+                Not Available &#9746;
+                {% endif %}
+            </td>
+            <td>
+                <!-- <a href="/editHardware/{{ hardware_item.id }}"> edit </a> -->
+                <a href="{% url 'edit_hardware' hardware_item.id %}"> edit </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}

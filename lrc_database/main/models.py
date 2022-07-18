@@ -25,7 +25,7 @@ class Course(models.Model):
 
 
 class LRCDatabaseUser(AbstractUser):
-    courses_tutored = models.ManyToManyField(Course)
+    courses_tutored = models.ManyToManyField(Course, blank=True, default=None)
     si_course = models.ForeignKey(
         to=Course,
         on_delete=models.SET_NULL,
@@ -33,6 +33,7 @@ class LRCDatabaseUser(AbstractUser):
         null=True,
         default=None,
         related_name="lrc_database_user_si_course",
+        verbose_name="SI course",
     )
 
     def __str__(self):
@@ -140,15 +141,22 @@ class Loan(models.Model):
         to=Hardware,
         related_name="intended_hardware_to_borrow",
         on_delete=models.CASCADE,
-        help_text="The desired hardware being requested",
+        help_text="REQUESTED HARDWARE",
     )
 
     hardware_user = models.ForeignKey(
         to=LRCDatabaseUser,
         on_delete=models.CASCADE,
-        help_text="The LRC user borrowing the hardware",
+        help_text="LRC USER",
     )
 
-    start_time = models.DateTimeField()
+    start_time = models.DateTimeField(
+        help_text="DD/MM/YYYY HH:MM",
+    )
 
-    return_time = models.DateTimeField(null=True, blank=True)
+    return_time = models.DateTimeField(
+        blank=True,
+        null=True,
+        default=None,
+        help_text="DD/MM/YYYY HH:MM",
+    )
