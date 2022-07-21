@@ -2,16 +2,22 @@ version: "3.7"
 services:
   app:
     build: .
-    volumes:
-      - ./lrc_database:/srv
-    command: python manage.py runserver 0.0.0.0:8000
     expose:
       - 8000
     environment:
+      LRC_DATABASE_DEBUG: 1
+      LRC_DATABASE_SECRET_KEY: INSECURE-REPLACE-ME
       PYTHONDONTWRITEBYTECODE: 1
+    volumes:
+      - ./lrc_database/db.sqlite3:/srv/db.sqlite3
+      - static-content:/srv/main/static
   proxy:
     build: ./nginx
     ports:
       - 80:80
     depends_on:
       - app
+    volumes:
+      - static-content:/srv/static
+volumes:
+  static-content:

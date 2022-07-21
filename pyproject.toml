@@ -1,3 +1,10 @@
+##############
+### BANDIT ###
+##############
+
+[tool.bandit]
+exclude_dirs = ["lrc_database/main/management", "lrc_database/main/migrations"]
+
 #############
 ### BLACK ###
 #############
@@ -48,11 +55,12 @@ gunicorn = "^20.1.0"
 pytz = "^2022.1"
 
 [tool.poetry.dev-dependencies]
+bandit = {extras = ["toml"], version = "^1.7.4"}
 black = "^22.3.0"
 django-stubs = "^1.12.0"
 faker = "^13.14.0"
-mypy = "^0.961"
 isort = "^5.10.1"
+mypy = "^0.961"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

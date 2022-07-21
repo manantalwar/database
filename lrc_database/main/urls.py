@@ -1,6 +1,7 @@
 from django.urls import include, path
 
 from . import views
+from .views.bulk_shift_editing_views import drop_shifts_on_date, drop_shifts_on_date_confirmation
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -13,6 +14,12 @@ urlpatterns = [
         "scheduling/shift_change_requests/<str:kind>",
         views.view_shift_change_requests,
         name="view_shift_change_requests",
+    ),
+    path("scheduling/bulk/drop_on_date", drop_shifts_on_date, name="drop_shifts_on_date"),
+    path(
+        "scheduling/bulk/drop_on_date/confirm",
+        drop_shifts_on_date_confirmation,
+        name="drop_shifts_on_date_confirmation",
     ),
     path("shifts/<int:shift_id>", views.view_shift, name="view_shift"),
     path(

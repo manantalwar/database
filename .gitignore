@@ -2,6 +2,7 @@
 **/__pycache__/
 .venv/
 poetry.lock
+.venv/
 
 # SQLite
 **/*.sqlite3
