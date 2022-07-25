@@ -1,11 +1,21 @@
-from typing import Dict
+from typing import TypedDict, Union
 
 from django.http.request import HttpRequest
 
 from .models import ShiftChangeRequest
 
 
-def alert_counts(request: HttpRequest) -> Dict[str, int]:
+class AlertCountDict(TypedDict):
+    pending_si_change_count: int
+    pending_tutoring_change_count: int
+    total_alert_count: int
+
+
+class EmptyDict(TypedDict):
+    pass
+
+
+def alert_counts(request: HttpRequest) -> Union[AlertCountDict, EmptyDict]:
     """
     Makes counts for various alert types available to all templates as variables, so that we can show alert counts in
     the navbar.
