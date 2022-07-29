@@ -8,7 +8,7 @@ from django.contrib.auth.models import Group
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from faker import Faker
-from main.models import Course, Hardware, LRCDatabaseUser, Shift, ShiftChangeRequest
+from main.models import Course, Hardware, LRCDatabaseUser, Shift, SIShiftChangeRequest, TutorShiftChangeRequest
 
 User = get_user_model()
 fake = Faker()
@@ -182,7 +182,7 @@ def create_si_shift_change_requests(request_count: int):
         new_start = timezone.now() if random.random() < 0.25 else None
         new_duration = timezone.timedelta(hours=2) if random.random() < 0.25 else None
         new_location = get_random_location() if random.random() < 0.25 else None
-        ShiftChangeRequest.objects.create(
+        SIShiftChangeRequest.objects.create(
             target=target,
             reason=reason,
             request_state=request_state,
@@ -203,15 +203,17 @@ def create_tutor_shift_change_requests(request_count: int):
         request_state = random.choice(type)
         approved_by = get_random_object(LRCDatabaseUser) if type == "Approved" else None
         approved_on = timezone.now() if type == "Approved" else None
+        new_associated_person = get_random_object(LRCDatabaseUser) if random.random() < 0.25 else None
         new_start = timezone.now() if random.random() < 0.25 else None
         new_duration = timezone.timedelta(hours=2) if random.random() < 0.25 else None
         new_location = get_random_location() if random.random() < 0.25 else None
-        ShiftChangeRequest.objects.create(
+        TutorShiftChangeRequest.objects.create(
             target=target,
             reason=reason,
             request_state=request_state,
             approved_by=approved_by,
             approved_on=approved_on,
+            new_associated_person=new_associated_person,
             new_start=new_start,
             new_duration=new_duration,
             new_location=new_location,
