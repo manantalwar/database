@@ -2,7 +2,7 @@ from typing import TypedDict, Union
 
 from django.http.request import HttpRequest
 
-from .models import ShiftChangeRequest
+from .models import SIShiftChangeRequest, TutorShiftChangeRequest
 
 
 class AlertCountDict(TypedDict):
@@ -25,8 +25,8 @@ def alert_counts(request: HttpRequest) -> Union[AlertCountDict, EmptyDict]:
         return {}
     if not request.user.groups.filter(name__in=("Office staff", "Supervisors")).exists():
         return {}
-    si_count = ShiftChangeRequest.objects.filter(target__kind="SI").count()
-    tutoring_count = ShiftChangeRequest.objects.filter(target__kind="Tutoring").count()
+    si_count = SIShiftChangeRequest.objects.filter(target__kind="SI").count()
+    tutoring_count = TutorShiftChangeRequest.objects.filter(target__kind="Tutoring").count()
     return {
         "pending_si_change_count": si_count,
         "pending_tutoring_change_count": tutoring_count,
