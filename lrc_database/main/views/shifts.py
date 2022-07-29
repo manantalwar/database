@@ -63,18 +63,18 @@ def new_shift_change_request(request: HttpRequest, shift_id: int) -> HttpRespons
         )
     else:
         if request.method == "POST":
-            form = NewTutorChangeRequestForm(request.POST)
+            form2 = NewTutorChangeRequestForm(request.POST)
             if form.is_valid():
-                s = TutorShiftChangeRequest(
+                s2 = TutorShiftChangeRequest(
                     target=shift, request_state="New", approved_by=None, approved_on=None, **form.cleaned_data
                 )
-                s.save()
+                s2.save()
                 return redirect("view_shift", shift_id)
             else:
                 messages.add_message(request, messages.ERROR, f"Form errors: {form.errors}")
                 return redirect("new_shift_change_request", shift_id)
         else:
-            form = NewTutorChangeRequestForm(
+            form2 = NewTutorChangeRequestForm(
                 initial={
                     "new_associated_person": shift.associated_person,
                     "new_start": shift.start,
