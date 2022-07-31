@@ -14,7 +14,7 @@ check_isort:
 	isort lrc_database --check --diff
 
 check_mypy:
-	cd ./lrc_database && mypy . --config ../pyproject.toml
+	cd ./lrc_database && mypy . --config ../pyproject.toml --show-traceback
 
 check_code: check_bandit check_mypy
 
