@@ -67,6 +67,8 @@ def personal(
     """
 
     def _wrapped_view(request: HttpRequest, user_id: int, *args: P.args, **kwargs: P.kwargs):
+        if not request.user.is_authenticated:
+            return redirect_to_login(request.get_full_path())
         if request.user.id == user_id or request.user.is_privileged():
             return view(request, user_id, *args, **kwargs)
         raise PermissionDenied

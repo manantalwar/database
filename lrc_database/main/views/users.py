@@ -51,14 +51,10 @@ def user_profile(request: HttpRequest, user_id: int) -> HttpResponse:
 def user_event_feed(request: HttpRequest, user_id: int) -> HttpResponse:
 
     try:
-        start = request.GET["start"]
-        end = request.GET["end"]
+        start = datetime.fromisoformat(request.GET["start"])
+        end = datetime.fromisoformat(request.GET["end"])
     except KeyError:
         raise BadRequest("Both start and end dates must be specified.")
-
-    try:
-        start = datetime.fromisoformat(start)
-        end = datetime.fromisoformat(end)
     except ValueError:
         raise BadRequest("Either start or end date is not in correct ISO8601 format.")
 
