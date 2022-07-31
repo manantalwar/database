@@ -2,7 +2,11 @@
 {% load groups static %}
 
 {% block extra_includes %}
-    <script>const events = JSON.parse("{{ target_users_shifts|escapejs }}");</script>
+    <script>
+        const eventSources = [{
+            url: "/api/user_event_feed/{{ target_user.id }}",
+        }];
+    </script>
     <script src="{% static 'js/calendar.js' %}"></script>
 {% endblock %}
 

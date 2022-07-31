@@ -58,6 +58,22 @@ def restrict_to_http_methods(
     return decorator
 
 
+def personal(
+    view: Callable[Concatenate[HttpRequest, int, P], HttpResponse]
+) -> Callable[Concatenate[HttpRequest, int, P], HttpResponse]:
+    """
+    Annotation for views that are "personal" to some user, meaning they should only be viewable to that user and
+    privileged users.
+    """
+    
+    def _wrapped_view(request: HttpRequest, user_id: int, *args: P.args, **kwargs: P.kwargs):
+        if request.user.id == user_id or request.user.is_privileged():
+            return view(request, user_id, *args, **kwargs)
+        raise PermissionDenied
+
+    return _wrapped_view
+
+
 @login_required
 def index(request):
     pending_shift_change_requests = ShiftChangeRequest.objects.filter(

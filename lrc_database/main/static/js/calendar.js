@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: 'dayGridMonth',
     themeSystem: 'bootstrap5',
-    events: events,
+    eventSources: eventSources
   });
   calendar.render();
 });

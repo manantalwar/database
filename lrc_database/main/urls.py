@@ -5,11 +5,12 @@ from .views.bulk_shift_editing_views import drop_shifts_on_date, drop_shifts_on_
 from .views.courses import add_course, edit_course, list_courses, view_course
 from .views.hardware import add_hardware, add_loans, edit_hardware, edit_loans, show_hardware, show_loans
 from .views.shifts import new_shift_change_request, view_shift, view_shift_change_requests
-from .views.users import create_user, create_users_in_bulk, edit_profile, list_users, user_profile
+from .views.users import create_user, create_users_in_bulk, edit_profile, list_users, user_event_feed, user_profile
 
 urlpatterns = [
     path("", index, name="index"),
     path("accounts/", include("django.contrib.auth.urls")),
+    path("api/user_event_feed/<int:user_id>", user_event_feed, name="user_event_feed"),
     path("courses/", list_courses, name="list_courses"),
     path("courses/<int:course_id>", view_course, name="view_course"),
     path("courses/<int:course_id>/edit", edit_course, name="edit_course"),

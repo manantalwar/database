@@ -36,7 +36,10 @@ class LRCDatabaseUser(AbstractUser):
         verbose_name="SI course",
     )
 
-    def __str__(self):
+    def is_privileged(self) -> bool:
+        return self.groups.filter(name__in=("Office staff", "Supervisors")).exists()
+
+    def __str__(self) -> str:
         if not (self.first_name and self.last_name):
             return self.username
         else:
