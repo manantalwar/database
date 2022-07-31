@@ -4,12 +4,7 @@ from .views import index
 from .views.bulk_shift_editing_views import drop_shifts_on_date, drop_shifts_on_date_confirmation
 from .views.courses import add_course, edit_course, list_courses, view_course
 from .views.hardware import add_hardware, add_loans, edit_hardware, edit_loans, show_hardware, show_loans
-from .views.shifts import (
-    new_shift_change_request,
-    view_shift,
-    view_si_shift_change_requests,
-    view_tutor_shift_change_requests,
-)
+from .views.shifts import new_shift_change_request, view_shift, view_shift_change_requests, view_single_request
 from .views.users import create_user, create_users_in_bulk, edit_profile, list_users, user_event_feed, user_profile
 
 urlpatterns = [
@@ -20,15 +15,17 @@ urlpatterns = [
     path("courses/<int:course_id>", view_course, name="view_course"),
     path("courses/<int:course_id>/edit", edit_course, name="edit_course"),
     path("courses/add", add_course, name="add_course"),
+    # view all new requests of a certain kind
     path(
-        "scheduling/si_shift_change_requests/<str:kind>",
-        view_si_shift_change_requests,
+        "scheduling/shift_change_requests/<str:kind>",
+        view_shift_change_requests,
         name="view_shift_change_requests",
     ),
+    # view single request
     path(
-        "scheduling/tutor_shift_change_requests/<str:kind>",
-        view_tutor_shift_change_requests,
-        name="view_tutor_shift_change_requests",
+        "scheduling/shift_change_requests/<str:kind>/<int:request_id>",
+        view_single_request,
+        name="view_single_si_request",
     ),
     path("scheduling/bulk/drop_on_date", drop_shifts_on_date, name="drop_shifts_on_date"),
     path(

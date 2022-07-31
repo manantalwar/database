@@ -91,21 +91,29 @@ def new_shift_change_request(request: HttpRequest, shift_id: int) -> HttpRespons
 
 @restrict_to_groups("Office staff", "Supervisors")
 @restrict_to_http_methods("GET")
-def view_si_shift_change_requests(request: HttpRequest, kind: str) -> HttpResponse:
-    requests = get_list_or_404(SIShiftChangeRequest, target__kind=kind, approved=False)
-    return render(
-        request,
-        "scheduling/view_si_shift_change_requests.html",
-        {"change_requests": requests, "kind": kind},
-    )
+def view_shift_change_requests(request: HttpRequest, kind: str) -> HttpResponse:
+    if kind == "Tutor":
+        requests = get_list_or_404(TutorShiftChangeRequest, target__kind=kind, request_state="New")
+        return render(
+            request,
+            "scheduling/view_shift_change_requests.html",
+            {"change_requests": requests, "kind": kind},
+        )
+    else:
+        requests2 = get_list_or_404(SIShiftChangeRequest, target__kind=kind, request_state="New")
+        return render(
+            request,
+            "scheduling/view_shift_change_requests.html",
+            {"change_requests": requests2, "kind": kind},
+        )
 
 
 @restrict_to_groups("Office staff", "Supervisors")
 @restrict_to_http_methods("GET")
-def view_tutor_shift_change_requests(request: HttpRequest, kind: str) -> HttpResponse:
-    requests = get_list_or_404(SIShiftChangeRequest, target__kind=kind, approved=False)
-    return render(
-        request,
-        "scheduling/view_si_shift_change_requests.html",
-        {"change_requests": requests, "kind": kind},
-    )
+def view_single_request(request: HttpRequest, kind: str, request_id: int) -> HttpResponse:
+    if kind == "SI":
+        shift_request = get_object_or_404(SIShiftChangeRequest, id=request_id)
+        return render(request, "shifts/view_request.html", {"shift_request": shift_request})
+    else:
+        shift_request2 = get_object_or_404(TutorShiftChangeRequest, id=request_id)
+        return render(request, "shifts/view_request.html", {"shift_request": shift_request2})

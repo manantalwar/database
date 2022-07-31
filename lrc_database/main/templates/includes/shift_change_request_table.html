@@ -2,31 +2,35 @@
     <thead>
         <tr>
             <th scope="col">Reason</th>
-            <th scope="col">Approved?</th>
+            <th scope="col">Current State</th>
             <th scope="col">Approver</th>
+            <th scope="col">View</th>
         </tr>
     </thead>
     <tbody>
         {% for change_request in change_requests %}
-            <tr>
-                <td>{{ change_request.reason }}</td>
-                <td>{{ change_request.approved }}</td>
-                <td>
-                    {% if change_request.approved %}
-                        <a href="{% url 'user_profile' change_request.approved_by.id %}">{{ change_request.approved_by }}</a>
-                    {% else %}
-                        N/A
-                    {% endif %}
-                </td>
-            </tr>
+        <tr>
+            <td>{{ change_request.reason }}</td>
+            <td>{{ change_request.request_state }}</td>
+            <td>
+                {% if change_request.approved %}
+                <a href="{% url 'user_profile' change_request.approved_by.id %}">{{ change_request.approved_by }}</a>
+                {% else %}
+                N/A
+                {% endif %}
+            </td>
+            <td>
+                <a href="{% url 'view_single_si_request' change_request.target.kind change_request.id %}">View</a>
+            </td>
+        </tr>
         {% empty %}
-            <tr>
-                <td colspan="3">
-                    <div align="center">
-                        <em>None.</em>
-                    </div>
-                </td>
-            </tr>
+        <tr>
+            <td colspan="3">
+                <div align="center">
+                    <em>None.</em>
+                </div>
+            </td>
+        </tr>
         {% endfor %}
     </tbody>
 </table>
