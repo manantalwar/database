@@ -22,11 +22,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-SECRET_KEY = os.getenv("LRC_DATABASE_SECRET_KEY")
+SECRET_KEY = os.environ.get("LRC_DATABASE_SECRET_KEY", "INSECURE-REPLACE-ME")
 
 ALLOWED_HOSTS: List[str] = []
 
-DEBUG = os.getenv("LRC_DATABASE_DEBUG") == "1"
+DEBUG = os.environ.get("LRC_DATABASE_DEBUG", "0") == "1"
 
 
 # Application definition
@@ -111,7 +111,7 @@ AUTH_USER_MODEL = "main.LRCDatabaseUser"
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/New_York"
 
 USE_I18N = True
 

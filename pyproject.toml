@@ -47,7 +47,7 @@ description = "Session scheduling program for peer tutors and SI leaders (and so
 authors = ["Simon Andrews <sbandrews@umass.edu>", "Lily Rosenbaum <lrosenbaum@umass.edu>"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 crispy-bootstrap5 = "^0.6"
 django = "^4.0.5"
 django-crispy-forms = "^1.14.0"

@@ -1,6 +1,9 @@
 run:
 	LRC_DATABASE_SECRET_KEY=abc123 LRC_DATABASE_DEBUG=1 ./lrc_database/manage.py runserver
 
+run_docker:
+	LRC_DATABASE_SECRET_KEY=abc123 docker compose up
+
 check_bandit:
 	bandit lrc_database --recursive --configfile pyproject.toml
 
@@ -11,7 +14,7 @@ check_isort:
 	isort lrc_database --check --diff
 
 check_mypy:
-	cd ./lrc_database && mypy . --config ../pyproject.toml
+	cd ./lrc_database && mypy . --config ../pyproject.toml --show-traceback
 
 check_code: check_bandit check_mypy
 

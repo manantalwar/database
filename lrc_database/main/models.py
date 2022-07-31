@@ -37,6 +37,16 @@ class LRCDatabaseUser(AbstractUser):
     )
 
 
+    def is_privileged(self) -> bool:
+        return self.groups.filter(name__in=("Office staff", "Supervisors")).exists()
+
+    def __str__(self) -> str:
+        if not (self.first_name and self.last_name):
+            return self.username
+        else:
+            return f"{self.first_name} {self.last_name}"
+
+
 class Shift(models.Model):
     associated_person = models.ForeignKey(
         to=LRCDatabaseUser,

@@ -1,17 +1,19 @@
 import json
+from datetime import datetime
+from typing import Any, Dict
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
-from django.core.exceptions import PermissionDenied
-from django.http import HttpRequest, HttpResponse
+from django.core.exceptions import BadRequest, PermissionDenied
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
 from django.urls import reverse
 
 from ..forms import CreateUserForm, CreateUsersInBulkForm, EditProfileForm
 from ..models import LRCDatabaseUser, Shift
-from . import restrict_to_groups, restrict_to_http_methods
+from . import personal, restrict_to_groups, restrict_to_http_methods
 
 User = get_user_model()
 
@@ -41,6 +43,43 @@ def user_profile(request: HttpRequest, user_id: int) -> HttpResponse:
         "users/user_profile.html",
         {"target_user": target_user, "target_users_shifts": target_users_shifts},
     )
+
+
+@login_required
+@personal
+@restrict_to_http_methods("GET")
+def user_event_feed(request: HttpRequest, user_id: int) -> HttpResponse:
+
+    try:
+        start = datetime.fromisoformat(request.GET["start"])
+        end = datetime.fromisoformat(request.GET["end"])
+    except KeyError:
+        raise BadRequest("Both start and end dates must be specified.")
+    except ValueError:
+        raise BadRequest("Either start or end date is not in correct ISO8601 format.")
+
+    user = get_object_or_404(User, id=user_id)
+    shifts = Shift.objects.filter(associated_person=user, start__gte=start, start__lte=end)
+    # TODO: Due to the way we store shifts in the database (start + duration only) it's difficult to find all shifts
+    # in a range. What we have here is a dirty hack that makes two assumptions:
+    #  - all shifts are short (no more than two hours-ish)
+    #  - we don't care that much if a few extra shifts are incorrectly returned (FullCalendar should handle this)
+    # It's probably worth figuring out a better way to do this at some point.
+
+    def to_json(shift: Shift) -> Dict[str, Any]:
+        return {
+            "id": str(shift.id),
+            "start": shift.start.isoformat(),
+            "end": (shift.start + shift.duration).isoformat(),
+            "title": str(shift),
+            "allDay": False,
+            "url": reverse("view_shift", args=(shift.id,)),
+        }
+
+    print(shifts)
+
+    json_response = list(map(to_json, shifts))
+    return JsonResponse(json_response, safe=False)
 
 
 @login_required
