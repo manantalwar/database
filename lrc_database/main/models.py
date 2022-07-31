@@ -36,7 +36,6 @@ class LRCDatabaseUser(AbstractUser):
         verbose_name="SI course",
     )
 
-
     def is_privileged(self) -> bool:
         return self.groups.filter(name__in=("Office staff", "Supervisors")).exists()
 
