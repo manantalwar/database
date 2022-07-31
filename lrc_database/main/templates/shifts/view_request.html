@@ -5,10 +5,10 @@ This entire page is ugly and should be redone.
 {% endcomment %}
 
 {% block content %}
-
+<h2>{{ kind }} Request</h2>
 <ul>
     <li><strong>Associated person:</strong> {{ shift_request.target.associated_person }}</li>
-    {% if shift_request.target.kind == "Tutor" %}
+    {% if kind == "Tutoring" %}
     <li><strong>New Associated Person:</strong> {{ shift_request.new_associated_person }}</li>
     {% endif %}
     <li><strong>Current Start:</strong> {{ shift_request.target.start }}</li>
@@ -20,4 +20,19 @@ This entire page is ugly and should be redone.
     <li><strong>Reason for Change:</strong></li>
     <p>{{ shift_request.reason }}</p>
 </ul>
+<div class="add-btn">
+    <a href="">
+        <button type="button" class="btn btn-primary">
+            Approve
+        </button>
+    </a>
+    <a href="">
+        <button type="button" class="btn btn-primary">
+            Deny
+        </button>
+    </a>
+    {% if kind == "SI" %}
+    <a href=""><button type="button" class="btn btn-primary">Send To Pending</button></a>
+    {% endif %}
+</div>
 {% endblock %}

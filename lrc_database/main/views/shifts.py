@@ -113,7 +113,7 @@ def view_shift_change_requests(request: HttpRequest, kind: str) -> HttpResponse:
 def view_single_request(request: HttpRequest, kind: str, request_id: int) -> HttpResponse:
     if kind == "SI":
         shift_request = get_object_or_404(SIShiftChangeRequest, id=request_id)
-        return render(request, "shifts/view_request.html", {"shift_request": shift_request})
+        return render(request, "shifts/view_request.html", {"shift_request": shift_request, "kind": kind})
     else:
         shift_request2 = get_object_or_404(TutorShiftChangeRequest, id=request_id)
-        return render(request, "shifts/view_request.html", {"shift_request": shift_request2})
+        return render(request, "shifts/view_request.html", {"shift_request": shift_request2, "kind": kind})
