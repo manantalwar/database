@@ -158,7 +158,6 @@ def create_shifts():
         shift_times = all_of_day_in_month(current_year, current_month, weekday_1, hour_1) + all_of_day_in_month(
             current_year, current_month, weekday_2, hour_2
         )
-        print(group)
         kind = "SI" if group == "SIs" else "Tutoring"
         for shift_time in shift_times:
             Shift.objects.create(
