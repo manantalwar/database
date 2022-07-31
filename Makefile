@@ -1,6 +1,9 @@
 run:
 	LRC_DATABASE_SECRET_KEY=abc123 LRC_DATABASE_DEBUG=1 ./lrc_database/manage.py runserver
 
+run_docker:
+	LRC_DATABASE_SECRET_KEY=abc123 docker compose up
+
 check_bandit:
 	bandit lrc_database --recursive --configfile pyproject.toml
 

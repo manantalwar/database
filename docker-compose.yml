@@ -5,12 +5,13 @@ services:
     expose:
       - 8000
     environment:
-      LRC_DATABASE_DEBUG: 1
-      LRC_DATABASE_SECRET_KEY: INSECURE-REPLACE-ME
+      LRC_DATABASE_DEBUG: 0
+      LRC_DATABASE_SECRET_KEY: ${LRC_DATABASE_SECRET_KEY}
       PYTHONDONTWRITEBYTECODE: 1
     volumes:
       - ./lrc_database/db.sqlite3:/srv/db.sqlite3
       - static-content:/srv/main/static
+    restart: always
   proxy:
     build: ./nginx
     ports:
@@ -19,5 +20,6 @@ services:
       - app
     volumes:
       - static-content:/srv/static
+    restart: always
 volumes:
   static-content:
