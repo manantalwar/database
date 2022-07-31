@@ -14,7 +14,7 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lrc_database.settings")
 
-if settings.SECRET_KEY == "":  # nosec - Bandit believes "" is a hardcoded password
+if settings.SECRET_KEY in ("", "INSECURE-REPLACE-ME"):
     raise RuntimeError("Secret key has not been set. Refusing to launch.")
 
 application = get_wsgi_application()

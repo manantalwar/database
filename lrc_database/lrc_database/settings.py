@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-SECRET_KEY = os.environ.get("LRC_DATABASE_SECRET_KEY", "")
+SECRET_KEY = os.environ.get("LRC_DATABASE_SECRET_KEY", "INSECURE-REPLACE-ME")
 
 ALLOWED_HOSTS: List[str] = []
 
