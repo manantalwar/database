@@ -66,7 +66,7 @@ def create_special_users():
     )
     User.objects.create_user(
         username="supervisor",
-        password="pass",
+        password="password",
         first_name="Test Supervisor",
         last_name="user",
     )

@@ -21,11 +21,11 @@ def view_shift(request: HttpRequest, shift_id: int) -> HttpResponse:
             {"shift": shift, "change_requests": change_requests},
         )
     else:
-        change_requests = TutorShiftChangeRequest.objects.filter(target=shift)
+        change_requests2 = TutorShiftChangeRequest.objects.filter(target=shift)
         return render(
             request,
             "shifts/view_shift.html",
-            {"shift": shift, "change_requests": change_requests},
+            {"shift": shift, "change_requests": change_requests2},
         )
 
 
