@@ -7,7 +7,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import render
 
-from ..models import ShiftChangeRequest
+from ..models import SIShiftChangeRequest, TutorShiftChangeRequest
 
 P = ParamSpec("P")
 User = get_user_model()
@@ -78,7 +78,18 @@ def personal(
 
 @login_required
 def index(request):
-    pending_shift_change_requests = ShiftChangeRequest.objects.filter(
-        target__associated_person=request.user, approved=False
+    pending_si_shift_change_requests = SIShiftChangeRequest.objects.filter(
+        target__associated_person=request.user, request_state="New"
     )
-    return render(request, "index.html", {"change_requests": pending_shift_change_requests})
+    pending_tutor_shift_change_requests = TutorShiftChangeRequest.objects.filter(
+        target__associated_person=request.user, request_state="New"
+    )
+
+    return render(
+        request,
+        "index.html",
+        {
+            "si_change_requests": pending_si_shift_change_requests,
+            "tutor_change_request": pending_tutor_shift_change_requests,
+        },
+    )

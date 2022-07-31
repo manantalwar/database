@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import Group
 
-from .models import Course, Hardware, Loan, LRCDatabaseUser, ShiftChangeRequest
+from .models import Course, Hardware, Loan, LRCDatabaseUser, SIShiftChangeRequest, TutorShiftChangeRequest
 
 
 class CourseForm(forms.ModelForm):
@@ -28,9 +28,20 @@ class EditProfileForm(forms.ModelForm):
         fields = ("first_name", "last_name", "email")
 
 
-class NewChangeRequestForm(forms.ModelForm):
+class NewSIChangeRequestForm(forms.ModelForm):
     class Meta:
-        model = ShiftChangeRequest
+        model = SIShiftChangeRequest
+        fields = (
+            "reason",
+            "new_start",
+            "new_duration",
+            "new_location",
+        )
+
+
+class NewTutorChangeRequestForm(forms.ModelForm):
+    class Meta:
+        model = TutorShiftChangeRequest
         fields = (
             "reason",
             "new_associated_person",

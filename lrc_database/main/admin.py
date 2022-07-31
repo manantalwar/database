@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Course, Hardware, Loan, LRCDatabaseUser, Shift, ShiftChangeRequest
+from .models import Course, Hardware, Loan, LRCDatabaseUser, Shift, SIShiftChangeRequest, TutorShiftChangeRequest
 
 
 @admin.register(Course)
@@ -24,8 +24,8 @@ class ShiftAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(ShiftChangeRequest)
-class ShiftChangeRequestAdmin(admin.ModelAdmin):
+@admin.register(SIShiftChangeRequest)
+class SIShiftChangeRequestAdmin(admin.ModelAdmin):
     fieldsets = (
         (
             "Approval",
@@ -33,7 +33,42 @@ class ShiftChangeRequestAdmin(admin.ModelAdmin):
                 "fields": (
                     "target",
                     "reason",
-                    "approved",
+                    "request_state",
+                    "approved_by",
+                    "approved_on",
+                )
+            },
+        ),
+        (
+            "New data",
+            {
+                "fields": (
+                    "new_start",
+                    "new_duration",
+                    "new_location",
+                )
+            },
+        ),
+    )
+    list_display = (
+        "target",
+        "reason",
+        "request_state",
+        "approved_by",
+        "approved_on",
+    )
+
+
+@admin.register(TutorShiftChangeRequest)
+class TutorShiftChangeRequestAdmin(admin.ModelAdmin):
+    fieldsets = (
+        (
+            "Approval",
+            {
+                "fields": (
+                    "target",
+                    "reason",
+                    "request_state",
                     "approved_by",
                     "approved_on",
                 )
@@ -54,7 +89,7 @@ class ShiftChangeRequestAdmin(admin.ModelAdmin):
     list_display = (
         "target",
         "reason",
-        "approved",
+        "request_state",
         "approved_by",
         "approved_on",
     )

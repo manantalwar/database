@@ -68,10 +68,61 @@ class Shift(models.Model):
         return f"{self.associated_person} in {self.location} at {self.start}"
 
 
-class ShiftChangeRequest(models.Model):
+class SIShiftChangeRequest(models.Model):
     target = models.ForeignKey(
         to=Shift,
-        related_name="shift_change_request_target",
+        related_name="si_shift_change_request_target",
+        on_delete=models.CASCADE,
+        help_text="Shift to edit.",
+    )
+
+    reason = models.CharField(
+        max_length=512,
+        help_text="Explanation for why this change is being requested.",
+    )
+
+    request_state = models.CharField(
+        max_length=40,
+        choices=(("Approved", "Approved"), ("Pending", "Pending"), ("Not Approved", "Not Approved"), ("New", "New")),
+        help_text="The kind of shift this is.",
+    )
+    approved_by = models.ForeignKey(
+        to=LRCDatabaseUser,
+        related_name="si_shift_change_request_approved_by",
+        blank=True,
+        null=True,
+        default=None,
+        on_delete=models.CASCADE,
+        help_text="The user (if any) who approved the change request.",
+    )
+
+    approved_on = models.DateTimeField(help_text="When the request was approved.", blank=True, null=True, default=None)
+
+    new_start = models.DateTimeField(
+        blank=True,
+        null=True,
+        default=None,
+        help_text="The new time that the shift starts if this request is approved.",
+    )
+    new_duration = models.DurationField(
+        blank=True,
+        null=True,
+        default=None,
+        help_text="How long the shift will last, in HH:MM:SS format, if this request is approved.",
+    )
+    new_location = models.CharField(
+        max_length=32,
+        blank=True,
+        null=True,
+        default=None,
+        help_text="The new location where this shift will occur, e.g. GSMN 64, if this request is approved.",
+    )
+
+
+class TutorShiftChangeRequest(models.Model):
+    target = models.ForeignKey(
+        to=Shift,
+        related_name="tutor_shift_change_request_target",
         on_delete=models.CASCADE,
         help_text="Shift to edit.",
     )
@@ -79,13 +130,15 @@ class ShiftChangeRequest(models.Model):
         max_length=512,
         help_text="Explanation for why this change is being requested.",
     )
-    approved = models.BooleanField(
-        default=False,
-        help_text="Whether the request is approved or not.",
+
+    request_state = models.CharField(
+        max_length=40,
+        choices=(("Approved", "Approved"), ("Not Approved", "Not Approved"), ("New", "New")),
+        help_text="The kind of shift this is.",
     )
     approved_by = models.ForeignKey(
         to=LRCDatabaseUser,
-        related_name="shift_change_request_approved_by",
+        related_name="tutor_shift_change_request_approved_by",
         blank=True,
         null=True,
         default=None,
@@ -101,7 +154,7 @@ class ShiftChangeRequest(models.Model):
 
     new_associated_person = models.ForeignKey(
         to=LRCDatabaseUser,
-        related_name="shift_change_request_new_associated_person",
+        related_name="tutor_shift_change_request_new_associated_person",
         on_delete=models.CASCADE,
         null=True,
         default=None,
