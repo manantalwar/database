@@ -4,7 +4,15 @@ from .views import index
 from .views.bulk_shift_editing_views import drop_shifts_on_date, drop_shifts_on_date_confirmation
 from .views.courses import add_course, edit_course, list_courses, view_course
 from .views.hardware import add_hardware, add_loans, edit_hardware, edit_loans, show_hardware, show_loans
-from .views.shifts import new_shift_change_request, view_shift, view_shift_change_requests, view_single_request
+from .views.shifts import (
+    new_shift_change_request,
+    view_approved_shift_change_requests,
+    view_denied_shift_change_requests,
+    view_pending_shift_change_requests,
+    view_shift,
+    view_shift_change_requests,
+    view_single_request,
+)
 from .views.users import create_user, create_users_in_bulk, edit_profile, list_users, user_event_feed, user_profile
 
 urlpatterns = [
@@ -20,6 +28,24 @@ urlpatterns = [
         "scheduling/shift_change_requests/<str:kind>",
         view_shift_change_requests,
         name="view_shift_change_requests",
+    ),
+    # view all approved requests of a certain kind
+    path(
+        "scheduling/approved_shift_change_requests/<str:kind>",
+        view_approved_shift_change_requests,
+        name="view_approved_shift_change_requests",
+    ),
+    # view all denied requests of a certain kind
+    path(
+        "scheduling/denied_shift_change_requests/<str:kind>",
+        view_denied_shift_change_requests,
+        name="view_denied_shift_change_requests",
+    ),
+    # view all pending requests of a certain kind (just for SI)
+    path(
+        "scheduling/pending_shift_change_requests/<str:kind>",
+        view_pending_shift_change_requests,
+        name="view_pending_shift_change_requests",
     ),
     # view single request
     path(

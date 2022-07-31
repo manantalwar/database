@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>New {{ kind }} change requests</h2>
+<h2>Pending {{ kind }} change requests</h2>
 
 <div class="add-btn">
-    <button type="button" class="btn btn-primary" style="background-color:gray">
-        View New
-    </button>
+    <a href="{% url 'view_shift_change_requests' kind %}">
+        <button type="button" class="btn btn-primary">
+            View New
+        </button>
+    </a>
     <a href="{% url 'view_approved_shift_change_requests' kind %}">
         <button type="button" class="btn btn-primary">
             View Approved
@@ -17,13 +19,9 @@
             View Denied
         </button>
     </a>
-    {% if kind == "SI" %}
-    <a href="{% url 'view_pending_shift_change_requests' kind %}">
-        <button type="button" class="btn btn-primary">
-            View Pending
-        </button>
-    </a>
-    {% endif %}
+    <button type="button" class="btn btn-primary" style="background-color:gray">
+        View Pending
+    </button>
 </div>
 {% include "includes/shift_change_request_table.html" %}
 {% endblock %}

@@ -89,6 +89,7 @@ def new_shift_change_request(request: HttpRequest, shift_id: int) -> HttpRespons
         )
 
 
+# View all NEW requests
 @restrict_to_groups("Office staff", "Supervisors")
 @restrict_to_http_methods("GET")
 def view_shift_change_requests(request: HttpRequest, kind: str) -> HttpResponse:
@@ -104,6 +105,61 @@ def view_shift_change_requests(request: HttpRequest, kind: str) -> HttpResponse:
         return render(
             request,
             "scheduling/view_shift_change_requests.html",
+            {"change_requests": requests2, "kind": kind},
+        )
+
+
+# View all APPROVED requests
+@restrict_to_groups("Office staff", "Supervisors")
+@restrict_to_http_methods("GET")
+def view_approved_shift_change_requests(request: HttpRequest, kind: str) -> HttpResponse:
+    if kind == "Tutor":
+        requests = get_list_or_404(TutorShiftChangeRequest, target__kind=kind, request_state="Approved")
+        return render(
+            request,
+            "scheduling/view_approved_shift_change_requests.html",
+            {"change_requests": requests, "kind": kind},
+        )
+    else:
+        requests2 = get_list_or_404(SIShiftChangeRequest, target__kind=kind, request_state="Approved")
+        return render(
+            request,
+            "scheduling/view_approved_shift_change_requests.html",
+            {"change_requests": requests2, "kind": kind},
+        )
+
+
+# view all DENIED requests
+@restrict_to_groups("Office staff", "Supervisors")
+@restrict_to_http_methods("GET")
+def view_denied_shift_change_requests(request: HttpRequest, kind: str) -> HttpResponse:
+    if kind == "Tutor":
+        requests = get_list_or_404(TutorShiftChangeRequest, target__kind=kind, request_state="Not Approved")
+        return render(
+            request,
+            "scheduling/view_denied_shift_change_requests.html",
+            {"change_requests": requests, "kind": kind},
+        )
+    else:
+        requests2 = get_list_or_404(SIShiftChangeRequest, target__kind=kind, request_state="Not Approved")
+        return render(
+            request,
+            "scheduling/view_denied_shift_change_requests.html",
+            {"change_requests": requests2, "kind": kind},
+        )
+
+
+# View all PENDING requests
+@restrict_to_groups("Office staff", "Supervisors")
+@restrict_to_http_methods("GET")
+def view_pending_shift_change_requests(request: HttpRequest, kind: str) -> HttpResponse:
+    if kind == "Tutor":
+        return redirect(view_shift_change_requests, kind)
+    else:
+        requests2 = get_list_or_404(SIShiftChangeRequest, target__kind=kind, request_state="Pending")
+        return render(
+            request,
+            "scheduling/view_pending_shift_change_requests.html",
             {"change_requests": requests2, "kind": kind},
         )
 
