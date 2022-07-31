@@ -22,14 +22,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-SECRET_KEY = os.environ["LRC_DATABASE_SECRET_KEY"]
-
-if SECRET_KEY == "":
-    raise RuntimeError("Secret key has not been set. Refusing to launch.")
+SECRET_KEY = os.environ.get("LRC_DATABASE_SECRET_KEY", "")
 
 ALLOWED_HOSTS: List[str] = []
 
-DEBUG = os.environ["LRC_DATABASE_DEBUG"] == "1"
+DEBUG = os.environ.get("LRC_DATABASE_DEBUG", "0") == "1"
 
 
 # Application definition
