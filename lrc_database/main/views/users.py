@@ -63,11 +63,7 @@ def user_event_feed(request: HttpRequest, user_id: int) -> HttpResponse:
         raise BadRequest("Either start or end date is not in correct ISO8601 format.")
 
     user = get_object_or_404(User, id=user_id)
-    shifts = Shift.objects.filter(
-        associated_person=user,
-        start__gte=start,
-        start__lte=end
-    )
+    shifts = Shift.objects.filter(associated_person=user, start__gte=start, start__lte=end)
     # TODO: Due to the way we store shifts in the database (start + duration only) it's difficult to find all shifts
     # in a range. What we have here is a dirty hack that makes two assumptions:
     #  - all shifts are short (no more than two hours-ish)

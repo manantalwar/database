@@ -65,7 +65,7 @@ def personal(
     Annotation for views that are "personal" to some user, meaning they should only be viewable to that user and
     privileged users.
     """
-    
+
     def _wrapped_view(request: HttpRequest, user_id: int, *args: P.args, **kwargs: P.kwargs):
         if request.user.id == user_id or request.user.is_privileged():
             return view(request, user_id, *args, **kwargs)

@@ -132,7 +132,9 @@ def create_si_course_associations():
 
 
 def all_of_day_in_month(year: int, month: int, weekday: int, hour: int):
-    d = timezone.datetime(year, month, 1, hour, 0, 0, tzinfo=pytz.timezone("America/New_York")) + timezone.timedelta(days=6 - weekday)
+    d = timezone.datetime(year, month, 1, hour, 0, 0, tzinfo=pytz.timezone("America/New_York")) + timezone.timedelta(
+        days=6 - weekday
+    )
     ret = []
     while d.month == month:
         ret.append(d)
