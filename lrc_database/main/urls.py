@@ -1,7 +1,12 @@
 from django.urls import include, path
 
 from .views import index
-from .views.bulk_shift_editing_views import drop_shifts_on_date, drop_shifts_on_date_confirmation
+from .views.bulk_shift_editing_views import (
+    drop_shifts_on_date,
+    drop_shifts_on_date_confirmation,
+    swap_shift_dates,
+    swap_shift_dates_confirmation,
+)
 from .views.courses import add_course, edit_course, list_courses, view_course
 from .views.hardware import add_hardware, add_loans, edit_hardware, edit_loans, show_hardware, show_loans
 from .views.shifts import (
@@ -58,6 +63,12 @@ urlpatterns = [
         "scheduling/bulk/drop_on_date/confirm",
         drop_shifts_on_date_confirmation,
         name="drop_shifts_on_date_confirmation",
+    ),
+    path("scheduling/bulk/swap_shift_dates", swap_shift_dates, name="swap_shift_dates"),
+    path(
+        "scheduling/bulk/swap_shift_dates/confirmation",
+        swap_shift_dates_confirmation,
+        name="swap_shift_dates_confirmation",
     ),
     path("shifts/<int:shift_id>", view_shift, name="view_shift"),
     path("shifts/<int:shift_id>/request_change", new_shift_change_request, name="new_shift_change_request"),

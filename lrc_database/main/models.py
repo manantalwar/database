@@ -1,6 +1,10 @@
+import datetime
+
+import pytz
 from django.contrib.auth.models import AbstractUser
 from django.core import validators
 from django.db import models
+from django.db.models.query import QuerySet
 
 
 class Course(models.Model):
@@ -64,8 +68,20 @@ class Shift(models.Model):
         help_text="The kind of shift this is.",
     )
 
+    @staticmethod
+    def all_on_date(date: datetime.date) -> QuerySet["Shift"]:
+        tz_adjusted_range_start = datetime.datetime(
+            date.year, date.month, date.day, tzinfo=pytz.timezone("America/New_York")
+        )
+        tz_adjusted_range_end = tz_adjusted_range_start + datetime.timedelta(days=1)
+        return Shift.objects.filter(
+            start__gte=tz_adjusted_range_start,
+            start__lte=tz_adjusted_range_end,
+        )
+
     def __str__(self):
-        return f"{self.associated_person} in {self.location} at {self.start}"
+        tz = pytz.timezone("America/New_York")
+        return f"{self.associated_person} in {self.location} at {self.start.astimezone(tz)}"
 
 
 class SIShiftChangeRequest(models.Model):

@@ -76,8 +76,6 @@ def user_event_feed(request: HttpRequest, user_id: int) -> HttpResponse:
             "url": reverse("view_shift", args=(shift.id,)),
         }
 
-    print(shifts)
-
     json_response = list(map(to_json, shifts))
     return JsonResponse(json_response, safe=False)
 

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <form method="post" action="{% url 'swap_shift_dates_confirmation' %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" value="Swap">
+    </form>
+{% endblock %}

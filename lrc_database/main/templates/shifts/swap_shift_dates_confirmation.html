@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6">
+            <h2>From {{ first_date }} to {{ second_date }}</h2>
+            <ul>
+                {% for shift in first_date_shifts %}
+                    <li><a href="{% url 'view_shift' shift.id %}">{{ shift }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h2>From {{ second_date }} to {{ first_date }}</h2>
+            <ul>
+                {% for shift in second_date_shifts %}
+                    <li><a href="{% url 'view_shift' shift.id %}">{{ shift }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <a href="{% url 'swap_shift_dates_confirmation' %}?first={{ first_date|date:"c" }}&second={{ second_date|date:"c" }}" type="button" class="btn btn-danger">I'm sure</a>
+    <a href="{% url 'index' %}" type="button" class="btn btn-primary">Get me out of here!</a>
+{% endblock %}
