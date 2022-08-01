@@ -4,6 +4,8 @@ from .views import index
 from .views.bulk_shift_editing_views import (
     drop_shifts_on_date,
     drop_shifts_on_date_confirmation,
+    move_shifts_from_date,
+    move_shifts_from_date_confirmation,
     swap_shift_dates,
     swap_shift_dates_confirmation,
 )
@@ -69,6 +71,12 @@ urlpatterns = [
         "scheduling/bulk/swap_shift_dates/confirmation",
         swap_shift_dates_confirmation,
         name="swap_shift_dates_confirmation",
+    ),
+    path("scheduling/move_shifts_from_date", move_shifts_from_date, name="move_shifts_from_date"),
+    path(
+        "scheduling/move_shifts_from_date/confirm",
+        move_shifts_from_date_confirmation,
+        name="move_shifts_from_date_confirmation",
     ),
     path("shifts/<int:shift_id>", view_shift, name="view_shift"),
     path("shifts/<int:shift_id>/request_change", new_shift_change_request, name="new_shift_change_request"),

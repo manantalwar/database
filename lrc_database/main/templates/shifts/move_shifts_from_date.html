@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <form method="post" action="{% url 'move_shifts_from_date_confirmation' %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" value="Move">
+    </form>
+{% endblock %}

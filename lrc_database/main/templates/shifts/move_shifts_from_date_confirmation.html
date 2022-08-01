@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <p>Are you sure that you want to move the following shifts from {{ from_date }} to {{ to_date }}?</p>
+    <p>It may be difficult to move them back later. Please be careful!</p>
+    <ul>
+        {% for shift in affected_shifts %}
+            <li>{{ shift }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'move_shifts_from_date_confirmation' %}?from={{ from_date|date:"c" }}&to={{ to_date|date:"c" }}" type="button" class="btn btn-danger">I'm sure</a>
+    <a href="{% url 'index' %}" type="button" class="btn btn-primary">Get me out of here!</a>
+{% endblock %}

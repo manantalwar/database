@@ -15,11 +15,6 @@ class DropShiftsOnDateForm(forms.Form):
     date = forms.DateField()
 
 
-class SwapShiftDates(forms.Form):
-    first_date = forms.DateField()
-    second_date = forms.DateField()
-
-
 @restrict_to_groups("Office staff", "Supervisors")
 @restrict_to_http_methods("GET")
 def drop_shifts_on_date(request: HttpRequest) -> HttpResponse:
@@ -45,6 +40,11 @@ def drop_shifts_on_date_confirmation(request: HttpRequest) -> HttpResponse:
         deleted_count, _ = shifts.delete()
         messages.add_message(request, messages.INFO, f"Deleted {deleted_count} shifts.")
         return redirect("drop_shifts_on_date")
+
+
+class SwapShiftDates(forms.Form):
+    first_date = forms.DateField()
+    second_date = forms.DateField()
 
 
 @restrict_to_groups("Office staff", "Supervisors")
@@ -110,3 +110,53 @@ def swap_shift_dates_confirmation(request: HttpRequest) -> HttpResponse:
             request, messages.INFO, f"Swapped dates for {(first_date_shifts | second_date_shifts).count()} shifts."
         )
         return redirect("swap_shift_dates")
+
+
+class MoveShiftsFromDateForm(forms.Form):
+    from_ = forms.DateField()
+    to_ = forms.DateField()
+
+
+@restrict_to_groups("Office staff", "Supervisors")
+@restrict_to_http_methods("GET")
+def move_shifts_from_date(request: HttpRequest) -> HttpResponse:
+    form = MoveShiftsFromDateForm()
+    return render(request, "shifts/move_shifts_from_date.html", {"form": form})
+
+
+@restrict_to_groups("Office staff", "Supervisors")
+@restrict_to_http_methods("GET", "POST")
+def move_shifts_from_date_confirmation(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        form = MoveShiftsFromDateForm(request.POST)
+        if not form.is_valid():
+            messages.add_message(request, messages.ERROR, f"Form errors: {form.errors}")
+            return redirect("move_shifts_from_date")
+
+        from_date: date = form.cleaned_data["from_"]
+        to_date: date = form.cleaned_data["to_"]
+        from_date_shifts = Shift.all_on_date(from_date)
+
+        return render(
+            request,
+            "shifts/move_shifts_from_date_confirmation.html",
+            {"affected_shifts": from_date_shifts, "from_date": from_date, "to_date": to_date},
+        )
+    else:  # request.method == "GET"
+        from_date = date.fromisoformat(request.GET["from"])
+        to_date = date.fromisoformat(request.GET["to"])
+        from_date_shifts = Shift.all_on_date(from_date)
+        for shift in from_date_shifts:
+            start = shift.start.astimezone(pytz.timezone("America/New_York"))
+            start = start.replace(
+                year=to_date.year,
+                month=to_date.month,
+                day=to_date.day,
+            )
+            shift.start = start
+            shift.save()
+
+        messages.add_message(
+            request, messages.INFO, f"Moved {from_date_shifts.count()} shifts from {from_date} to {to_date}."
+        )
+        return redirect("move_shifts_from_date")
