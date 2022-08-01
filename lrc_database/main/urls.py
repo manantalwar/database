@@ -72,6 +72,8 @@ urlpatterns = [
     ),
     path("shifts/<int:shift_id>", view_shift, name="view_shift"),
     path("shifts/<int:shift_id>/request_change", new_shift_change_request, name="new_shift_change_request"),
+    path("users/create", create_user, name="create_user"),
+    path("users/create/bulk", create_users_in_bulk, name="create_users_in_bulk"),
     path("users/<int:user_id>", user_profile, name="user_profile"),
     path("users/<int:user_id>/edit", edit_profile, name="edit_profile"),
     path("users/<str:group>", list_users, name="list_users"),
@@ -81,7 +83,5 @@ urlpatterns = [
     path("edit_hardware/<int:hardware_id>", edit_hardware, name="edit_hardware"),
     path("add_hardware", add_hardware, name="add_hardware"),
     path("add_loans", add_loans, name="add_loans"),
-    path("users/create", create_user, name="create_user"),
-    path("users/create/bulk", create_users_in_bulk, name="create_users_in_bulk"),
     path("users/groups/<str:group>", list_users, name="list_users"),
 ]
