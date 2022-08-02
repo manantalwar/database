@@ -12,7 +12,7 @@ from . import restrict_to_groups, restrict_to_http_methods
 
 
 class DropShiftsOnDateForm(forms.Form):
-    date = forms.DateField()
+    date = forms.DateField(help_text="MM/DD/YYYY")
 
 
 @restrict_to_groups("Office staff", "Supervisors")
@@ -43,8 +43,8 @@ def drop_shifts_on_date_confirmation(request: HttpRequest) -> HttpResponse:
 
 
 class SwapShiftDates(forms.Form):
-    first_date = forms.DateField()
-    second_date = forms.DateField()
+    first_date = forms.DateField(help_text="MM/DD/YYYY")
+    second_date = forms.DateField(help_text="MM/DD/YYYY")
 
 
 @restrict_to_groups("Office staff", "Supervisors")
@@ -113,8 +113,8 @@ def swap_shift_dates_confirmation(request: HttpRequest) -> HttpResponse:
 
 
 class MoveShiftsFromDateForm(forms.Form):
-    from_ = forms.DateField()
-    to_ = forms.DateField()
+    from_ = forms.DateField(help_text="MM/DD/YYYY")
+    to_ = forms.DateField(help_text="MM/DD/YYYY")
 
 
 @restrict_to_groups("Office staff", "Supervisors")
