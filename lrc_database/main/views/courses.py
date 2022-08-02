@@ -1,10 +1,10 @@
 from datetime import datetime
 from typing import Any, Dict
 
-from django.core.exceptions import BadRequest
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import BadRequest
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -97,7 +97,7 @@ def course_event_feed(request: HttpRequest, course_id: int) -> JsonResponse:
     shifts = Shift.objects.filter(
         Q(associated_person__si_course=course) | Q(associated_person__courses_tutored=course),
         start__gte=start,
-        start__lte=end
+        start__lte=end,
     )
 
     def to_json(shift: Shift) -> Dict[str, Any]:
