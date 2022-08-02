@@ -238,6 +238,81 @@ def create_hardware(hardware_count: int):
         name = f"{hw_type} #{number}"
         Hardware.objects.create(name=name, is_available=is_available)
 
+BETA_USERS = {
+    "lin": {
+        "first_name": "Lin",
+        "last_name": "Tang",
+        "email": "lintang-nospam@umass.edu",
+    },
+    "stacie": {
+        "first_name": "Stacie",
+        "last_name": "Vanasse",
+        "email": "stacievanasse-nospam@umass.edu",
+    },
+    "deb": {
+        "first_name": "Deb",
+        "last_name": "Phillis",
+        "email": "debphillis-nospam@umass.edu"
+    },
+    "zeke": {
+        "first_name": "Zeke",
+        "last_name": "Shenk",
+        "email": "zekeshenk-nospam@umass.edu"
+    },
+    "maria": {
+        "first_name": "Maria",
+        "last_name": "Polino",
+        "email": "mariapolino-nospam@umass.edu"
+    },
+    "kereth": {
+        "first_name": "Kereth",
+        "last_name": "Cowe-Spigai",
+        "email": "kerethcowespigai-nospam@umass.edu"
+    }
+}
+
+
+def create_beta_users():
+    print("Creating beta users...")
+    si_group = Group.objects.filter(name="SIs").first()
+    tutor_group = Group.objects.filter(name="Tutors").first()
+    office_staff_group = Group.objects.filter(name="Office staff").first()
+    supervisor_group = Group.objects.filter(name="Supervisors").first()
+    for name, obj in BETA_USERS.items():
+        si = User.objects.create_user(
+            username=f"{name}_si",
+            password="password123",
+            first_name=obj["first_name"],
+            last_name=obj["last_name"] + " (SI)",
+            email=obj["email"],
+        )
+        si_group.user_set.add(si)
+        tutor = User.objects.create_user(
+            username=f"{name}_tutor",
+            password="password123",
+            first_name=obj["first_name"],
+            last_name=obj["last_name"] + " (tutor)",
+            email=obj["email"],
+        )
+        tutor_group.user_set.add(tutor)
+        office_staff = User.objects.create_user(
+            username=f"{name}_officestaff",
+            password="password123",
+            first_name=obj["first_name"],
+            last_name=obj["last_name"] + " (office staff)",
+            email=obj["email"],
+        )
+        office_staff_group.user_set.add(office_staff)
+        supervisor = User.objects.create_user(
+            username=f"{name}_supervisor",
+            password="password123",
+            first_name=obj["first_name"],
+            last_name=obj["last_name"] + " (supervisor)",
+            email=obj["email"],
+        )
+        supervisor_group.user_set.add(supervisor)
+
+
 
 class Command(BaseCommand):
     """
@@ -266,6 +341,7 @@ class Command(BaseCommand):
         create_special_users()
         create_other_users(options["user_count"])
         create_groups()
+        create_beta_users()
         create_courses(options["course_count"])
         create_tutor_course_associations(options["courses_per_tutor"])
         create_si_course_associations()

@@ -79,7 +79,7 @@ def personal(
 @login_required
 def index(request):
     if request.user.groups.filter(name__in=("Tutors", "SIs")).exists():
-        return redirect("user_profile", args=(request.user.id,))
+        return redirect("user_profile", request.user.id)
 
     pending_si_shift_change_requests = SIShiftChangeRequest.objects.filter(
         target__associated_person=request.user, request_state="New"

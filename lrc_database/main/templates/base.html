@@ -25,7 +25,7 @@
         {% include "includes/navbar.html" %}
         <div class="container" id="main-container">
             <div class="alert alert-info" role="alert">
-                You are using a development version of the database. Please remember that this website is mostly populated with fake data, and that it is frequently reset. Don't save any information you care about here.
+                You are using a development version of the database. Please remember that this website is mostly populated with fake data, and that it is reset every few hours (expect the site to go down briefly when this happens). Don't save any information you care about here. You can review the testing plan <a href="https://docs.google.com/document/d/1llD6EiCqrkPKCd4UWxlsqJ4CIM-wARfLm97-2KImYo4/edit">here</a> and use <a href="https://forms.gle/98Vq2Y2upWXQPiWq8">this form</a> to share your thoughts with us.
             </div>
             {% for message in messages %}
                 <div class="alert {% if message.level_tag %} alert-{{ message.level_tag }} {% endif %} {{ message.extra_tags }}" role="alert">

@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("LRC_DATABASE_SECRET_KEY", "INSECURE-REPLACE-ME")
 
-ALLOWED_HOSTS: List[str] = os.environ.get("LRC_DATABASE_ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS: List[str] = os.environ.get("LRC_DATABASE_ALLOWED_HOSTS", ".localhost,127.0.0.1,[::1]").split(",")
 
 DEBUG = os.environ.get("LRC_DATABASE_DEBUG", "0") == "1"
 
