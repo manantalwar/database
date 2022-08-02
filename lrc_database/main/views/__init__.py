@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from ..models import SIShiftChangeRequest, TutorShiftChangeRequest
 
@@ -78,6 +78,9 @@ def personal(
 
 @login_required
 def index(request):
+    if request.user.groups.filter(name__in=("Tutors", "SIs")).exists():
+        return redirect("user_profile", args=(request.user.id,))
+
     pending_si_shift_change_requests = SIShiftChangeRequest.objects.filter(
         target__associated_person=request.user, request_state="New"
     )
