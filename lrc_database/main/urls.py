@@ -101,9 +101,9 @@ urlpatterns = [
         swap_shift_dates_confirmation,
         name="swap_shift_dates_confirmation",
     ),
-    path("scheduling/move_shifts_from_date", move_shifts_from_date, name="move_shifts_from_date"),
+    path("scheduling/bulk/move_shifts_from_date", move_shifts_from_date, name="move_shifts_from_date"),
     path(
-        "scheduling/move_shifts_from_date/confirm",
+        "scheduling/bulk/move_shifts_from_date/confirm",
         move_shifts_from_date_confirmation,
         name="move_shifts_from_date_confirmation",
     ),
