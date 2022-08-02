@@ -1,11 +1,17 @@
+from datetime import datetime
+from typing import Any, Dict
+
+from django.core.exceptions import BadRequest
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, HttpResponse
+from django.db.models import Q
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 
 from ..forms import CourseForm
-from ..models import Course
+from ..models import Course, Shift
 from . import restrict_to_groups, restrict_to_http_methods
 
 User = get_user_model()
@@ -72,3 +78,37 @@ def edit_course(request: HttpRequest, course_id: int) -> HttpResponse:
             }
         )
         return render(request, "courses/edit_course.html", {"form": form, "course_id": course.id})
+
+
+@login_required
+@restrict_to_http_methods("GET")
+def course_event_feed(request: HttpRequest, course_id: int) -> JsonResponse:
+    try:
+        start = datetime.fromisoformat(request.GET["start"])
+        end = datetime.fromisoformat(request.GET["end"])
+    except KeyError:
+        raise BadRequest("Both start and end dates must be specified.")
+    except ValueError:
+        raise BadRequest("Either start or end date is not in correct ISO8601 format.")
+
+    course = get_object_or_404(Course, id=course_id)
+
+    # TODO: problematic, see comment on user_event_feed
+    shifts = Shift.objects.filter(
+        Q(associated_person__si_course=course) | Q(associated_person__courses_tutored=course),
+        start__gte=start,
+        start__lte=end
+    )
+
+    def to_json(shift: Shift) -> Dict[str, Any]:
+        return {
+            "id": str(shift.id),
+            "start": shift.start.isoformat(),
+            "end": (shift.start + shift.duration).isoformat(),
+            "title": str(shift),
+            "allDay": False,
+            "url": reverse("view_shift", args=(shift.id,)),
+        }
+
+    json_response = list(map(to_json, shifts))
+    return JsonResponse(json_response, safe=False)

@@ -9,7 +9,7 @@ from .views.bulk_shift_editing_views import (
     swap_shift_dates,
     swap_shift_dates_confirmation,
 )
-from .views.courses import add_course, edit_course, list_courses, view_course
+from .views.courses import add_course, course_event_feed, edit_course, list_courses, view_course
 from .views.hardware import add_hardware, add_loans, edit_hardware, edit_loans, show_hardware, show_loans
 from .views.shifts import (
     approve_pending_request,
@@ -29,6 +29,7 @@ from .views.users import create_user, create_users_in_bulk, edit_profile, list_u
 urlpatterns = [
     path("", index, name="index"),
     path("accounts/", include("django.contrib.auth.urls")),
+    path("api/course_event_feed/<int:course_id>", course_event_feed, name="course_event_feed"),
     path("api/user_event_feed/<int:user_id>", user_event_feed, name="user_event_feed"),
     path("courses/", list_courses, name="list_courses"),
     path("courses/<int:course_id>", view_course, name="view_course"),

@@ -49,7 +49,6 @@ def user_profile(request: HttpRequest, user_id: int) -> HttpResponse:
 @personal
 @restrict_to_http_methods("GET")
 def user_event_feed(request: HttpRequest, user_id: int) -> HttpResponse:
-
     try:
         start = datetime.fromisoformat(request.GET["start"])
         end = datetime.fromisoformat(request.GET["end"])

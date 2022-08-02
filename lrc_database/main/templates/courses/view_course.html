@@ -1,4 +1,14 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_includes %}
+    <script>
+        const eventSources = [{
+            url: "/api/course_event_feed/{{ course.id }}",
+        }];
+    </script>
+    <script src="{% static 'js/calendar.js' %}"></script>
+{% endblock %}
 
 {% block content %}
     <div class="row">
@@ -6,7 +16,12 @@
     </div>
     <div class="row">
         <div class="col-md-8">
-            TODO
+            <div class="card mb-3">
+                <div class="card-header">Calendar</div>
+                <div class="card-body">
+                    <div id="calendar"></div>
+                </div>
+            </div>
         </div>
         <div class="col-md-4">
             <div class="card mb-3">
