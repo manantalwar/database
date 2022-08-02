@@ -23,13 +23,7 @@ This is to view a NEW request
 </ul>
 <div class="add-btn">
     <script type="text/javascript">
-        function approved_clicked(self) {
-            if (confirm('Are you sure you want to approve this request?')) {
-                self.shift_request.request_state = "Approved"
-            } else {
-                return false;
-            }
-        }
+
         function denied_clicked(self) {
             if (confirm('Are you sure you want to approve this request?')) {
                 self.shift_request.request_state = "Not Approved"
@@ -39,8 +33,8 @@ This is to view a NEW request
         }
 
     </script>
-    <a href="{% url 'view_approved_shift_change_requests' kind %}">
-        <button type="button" class="btn btn-primary" onclick="return approved_clicked()">
+    <a href="{% url 'approve_pending_request' kind shift_request.id %}">
+        <button type="button" class="btn btn-primary">
             Approve
         </button>
     </a>
@@ -49,8 +43,6 @@ This is to view a NEW request
             Deny
         </button>
     </a>
-    {% if kind == "SI" %}
-    <a href=""><button type="button" class="btn btn-primary">Send To Pending</button></a>
-    {% endif %}
+
 </div>
 {% endblock %}

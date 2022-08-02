@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% comment %}
+This entire page is ugly and should be redone.
+This is to view a NEW request
+{% endcomment %}
+
+{% block content %}
+<h2>{{ kind }} Request</h2>
+<ul>
+    <li><strong>Associated person:</strong> {{ shift_request.target.associated_person }}</li>
+    {% if kind == "Tutoring" %}
+    <li><strong>New Associated Person:</strong> {{ shift_request.new_associated_person }}</li>
+    {% endif %}
+    <li><strong>Current Start:</strong> {{ shift_request.target.start }}</li>
+    <li><strong>New Start:</strong> {{ shift_request.new_start }}</li>
+    <li><strong>Current Duration:</strong> {{ shift_request.target.duration }}</li>
+    <li><strong>New Duration:</strong> {{ shift_request.new_duration }}</li>
+    <li><strong>Current Location:</strong> {{ shift_request.target.location }}</li>
+    <li><strong>New Location:</strong> {{ shift_request.new_location }}</li>
+    <li><strong>Reason for Change:</strong></li>
+    <p>{{ shift_request.reason }}</p>
+</ul>
+
+</div>
+{% endblock %}

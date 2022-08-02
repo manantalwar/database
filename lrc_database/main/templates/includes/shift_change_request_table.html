@@ -20,7 +20,15 @@
                 {% endif %}
             </td>
             <td>
-                <a href="{% url 'view_single_si_request' change_request.target.kind change_request.id %}">View</a>
+                {% if change_request.request_state == "New" %}
+                <a href="{% url 'view_single_request' change_request.target.kind change_request.id %}">View</a>
+                {% elif change_request.request_state == "Approved" %}
+                <a href="{% url 'view_approved_single_request' change_request.target.kind change_request.id %}">View</a>
+                {% elif change_request.request_state == "Not Approved" %}
+                <a href="{% url 'view_denied_single_request' change_request.target.kind change_request.id %}">View</a>
+                {% else %}
+                <a href="{% url 'view_pending_single_request' change_request.target.kind change_request.id %}">View</a>
+                {% endif %}
             </td>
         </tr>
         {% empty %}

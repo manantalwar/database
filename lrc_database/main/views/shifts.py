@@ -1,10 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
 
-from ..forms import NewSIChangeRequestForm, NewTutorChangeRequestForm
+from ..forms import NewSIChangeRequestForm, NewTutorChangeRequestForm, SIApproveRequestForm
 from ..models import Shift, SIShiftChangeRequest, TutorShiftChangeRequest
 from . import restrict_to_groups, restrict_to_http_methods
 
@@ -166,6 +166,7 @@ def view_pending_shift_change_requests(request: HttpRequest, kind: str) -> HttpR
 
 @restrict_to_groups("Office staff", "Supervisors")
 @restrict_to_http_methods("GET")
+# View new requests
 def view_single_request(request: HttpRequest, kind: str, request_id: int) -> HttpResponse:
     if kind == "SI":
         shift_request = get_object_or_404(SIShiftChangeRequest, id=request_id)
@@ -173,3 +174,64 @@ def view_single_request(request: HttpRequest, kind: str, request_id: int) -> Htt
     else:
         shift_request2 = get_object_or_404(TutorShiftChangeRequest, id=request_id)
         return render(request, "shifts/view_request.html", {"shift_request": shift_request2, "kind": kind})
+
+
+@restrict_to_groups("Office staff", "Supervisors")
+@restrict_to_http_methods("GET")
+# View approved requests
+def view_approved_single_request(request: HttpRequest, kind: str, request_id: int) -> HttpResponse:
+    if kind == "SI":
+        shift_request = get_object_or_404(SIShiftChangeRequest, id=request_id)
+        return render(request, "shifts/view_approved_request.html", {"shift_request": shift_request, "kind": kind})
+    else:
+        shift_request2 = get_object_or_404(TutorShiftChangeRequest, id=request_id)
+        return render(request, "shifts/view_approved_request.html", {"shift_request": shift_request2, "kind": kind})
+
+
+@restrict_to_groups("Office staff", "Supervisors")
+@restrict_to_http_methods("GET")
+# View denied requests
+def view_denied_single_request(request: HttpRequest, kind: str, request_id: int) -> HttpResponse:
+    if kind == "SI":
+        shift_request = get_object_or_404(SIShiftChangeRequest, id=request_id)
+        return render(request, "shifts/view_denied_request.html", {"shift_request": shift_request, "kind": kind})
+    else:
+        shift_request2 = get_object_or_404(TutorShiftChangeRequest, id=request_id)
+        return render(request, "shifts/view_denied_request.html", {"shift_request": shift_request2, "kind": kind})
+
+
+@restrict_to_groups("Office staff", "Supervisors")
+@restrict_to_http_methods("GET")
+# View pending requests
+def view_pending_single_request(request: HttpRequest, kind: str, request_id: int) -> HttpResponse:
+    if kind == "SI":
+        shift_request = get_object_or_404(SIShiftChangeRequest, id=request_id)
+        return render(request, "shifts/view_pending_request.html", {"shift_request": shift_request, "kind": kind})
+    else:
+        shift_request2 = get_object_or_404(TutorShiftChangeRequest, id=request_id)
+        return render(request, "shifts/view_pending_request.html", {"shift_request": shift_request2, "kind": kind})
+
+
+@restrict_to_groups("Office staff", "Supervisors")
+@restrict_to_http_methods("GET", "POST")
+def approve_pending_request(request: HttpRequest, kind: str, request_id: int) -> HttpResponse:
+    request_cur = SIShiftChangeRequest.objects.get(id=request_id)
+    shift = request_cur.target
+    if request.method == "POST":
+        form = SIApproveRequestForm(
+            request.POST,
+            instance=shift,
+            initial={
+                "associated_person": shift.associated_person,
+                "start": request_cur.new_start,
+                "duration": request_cur.new_duration,
+            },
+        )
+        if form.is_valid():
+            form.save()
+            request_cur.request_state = "Approved"
+            return HttpResponseRedirect("/scheduling/approved_shift_change_requests/SI")
+    else:
+        form = SIApproveRequestForm(instance=shift)
+
+    return render(request, "scheduling/approvePendingForm.html", {"form": form, "kind": kind, "request_id": request_id})

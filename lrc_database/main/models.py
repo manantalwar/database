@@ -134,6 +134,17 @@ class SIShiftChangeRequest(models.Model):
         help_text="The new location where this shift will occur, e.g. GSMN 64, if this request is approved.",
     )
 
+    def send_to_pending(self):
+        self.request_state = "Pending"
+
+    def send_to_denied(self):
+        self.request_state = "Not Approved"
+
+    def send_to_approved(self):
+        self.request_state = "Approved"
+        self.target.start = self.new_start
+        self.target.duration = self.new_duration
+
 
 class TutorShiftChangeRequest(models.Model):
     target = models.ForeignKey(
@@ -195,6 +206,14 @@ class TutorShiftChangeRequest(models.Model):
         default=None,
         help_text="The new location where this shift will occur, e.g. GSMN 64, if this request is approved.",
     )
+
+    def send_to_denied(self):
+        self.request_state = "Not Approved"
+
+    def send_to_approved(self):
+        self.request_state = "Approved"
+        self.target.start = self.new_start
+        self.target.duration = self.new_duration
 
 
 class Hardware(models.Model):

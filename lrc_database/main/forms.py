@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import Group
 
-from .models import Course, Hardware, Loan, LRCDatabaseUser, SIShiftChangeRequest, TutorShiftChangeRequest
+from .models import Course, Hardware, Loan, LRCDatabaseUser, Shift, SIShiftChangeRequest, TutorShiftChangeRequest
 
 
 class CourseForm(forms.ModelForm):
@@ -20,6 +20,12 @@ class CreateUserForm(forms.ModelForm):
 
 class CreateUsersInBulkForm(forms.Form):
     user_data = forms.CharField(widget=forms.Textarea)
+
+
+class SIApproveRequestForm(forms.ModelForm):
+    class Meta:
+        model = Shift
+        fields = ("associated_person", "start", "duration", "location")
 
 
 class EditProfileForm(forms.ModelForm):

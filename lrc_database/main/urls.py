@@ -12,10 +12,14 @@ from .views.bulk_shift_editing_views import (
 from .views.courses import add_course, edit_course, list_courses, view_course
 from .views.hardware import add_hardware, add_loans, edit_hardware, edit_loans, show_hardware, show_loans
 from .views.shifts import (
+    approve_pending_request,
     new_shift_change_request,
     view_approved_shift_change_requests,
+    view_approved_single_request,
     view_denied_shift_change_requests,
+    view_denied_single_request,
     view_pending_shift_change_requests,
+    view_pending_single_request,
     view_shift,
     view_shift_change_requests,
     view_single_request,
@@ -54,11 +58,35 @@ urlpatterns = [
         view_pending_shift_change_requests,
         name="view_pending_shift_change_requests",
     ),
-    # view single request
+    # view single new request
     path(
-        "scheduling/shift_change_requests/<str:kind>/<int:request_id>",
+        "scheduling/shift_change_requests/<str:kind>/<int:request_id>/n",
         view_single_request,
-        name="view_single_si_request",
+        name="view_single_request",
+    ),
+    # view single approved request
+    path(
+        "scheduling/shift_change_requests/<str:kind>/<int:request_id>/a",
+        view_approved_single_request,
+        name="view_approved_single_request",
+    ),
+    # view single denied request
+    path(
+        "scheduling/shift_change_requests/<str:kind>/<int:request_id>/d",
+        view_denied_single_request,
+        name="view_denied_single_request",
+    ),
+    # view single pending request
+    path(
+        "scheduling/shift_change_requests/<str:kind>/<int:request_id>/p",
+        view_pending_single_request,
+        name="view_pending_single_request",
+    ),
+    # approve single pending request form
+    path(
+        "scheduling/shift_change_requests/<str:kind>/<int:request_id>/approval_form",
+        approve_pending_request,
+        name="approve_pending_request",
     ),
     path("scheduling/bulk/drop_on_date", drop_shifts_on_date, name="drop_shifts_on_date"),
     path(
