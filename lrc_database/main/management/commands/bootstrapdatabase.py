@@ -238,6 +238,7 @@ def create_hardware(hardware_count: int):
         name = f"{hw_type} #{number}"
         Hardware.objects.create(name=name, is_available=is_available)
 
+
 BETA_USERS = {
     "lin": {
         "first_name": "Lin",
@@ -249,26 +250,10 @@ BETA_USERS = {
         "last_name": "Vanasse",
         "email": "stacievanasse-nospam@umass.edu",
     },
-    "deb": {
-        "first_name": "Deb",
-        "last_name": "Phillis",
-        "email": "debphillis-nospam@umass.edu"
-    },
-    "zeke": {
-        "first_name": "Zeke",
-        "last_name": "Shenk",
-        "email": "zekeshenk-nospam@umass.edu"
-    },
-    "maria": {
-        "first_name": "Maria",
-        "last_name": "Polino",
-        "email": "mariapolino-nospam@umass.edu"
-    },
-    "kereth": {
-        "first_name": "Kereth",
-        "last_name": "Cowe-Spigai",
-        "email": "kerethcowespigai-nospam@umass.edu"
-    }
+    "deb": {"first_name": "Deb", "last_name": "Phillis", "email": "debphillis-nospam@umass.edu"},
+    "zeke": {"first_name": "Zeke", "last_name": "Shenk", "email": "zekeshenk-nospam@umass.edu"},
+    "maria": {"first_name": "Maria", "last_name": "Polino", "email": "mariapolino-nospam@umass.edu"},
+    "kereth": {"first_name": "Kereth", "last_name": "Cowe-Spigai", "email": "kerethcowespigai-nospam@umass.edu"},
 }
 
 
@@ -311,7 +296,6 @@ def create_beta_users():
             email=obj["email"],
         )
         supervisor_group.user_set.add(supervisor)
-
 
 
 class Command(BaseCommand):
