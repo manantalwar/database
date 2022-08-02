@@ -24,6 +24,9 @@
     <body>
         {% include "includes/navbar.html" %}
         <div class="container" id="main-container">
+            <div class="alert alert-info" role="alert">
+                You are using a development version of the database. Please remember that this website is mostly populated with fake data, and that it is frequently reset. Don't save any information you care about here.
+            </div>
             {% for message in messages %}
                 <div class="alert {% if message.level_tag %} alert-{{ message.level_tag }} {% endif %} {{ message.extra_tags }}" role="alert">
                     {{ message|safe }}
