@@ -40,4 +40,7 @@ reset_database:
 	./lrc_database/manage.py migrate
 	./lrc_database/manage.py bootstrapdatabase
 
+install_git_hooks:
+	cp .git-hooks/* .git/hooks
+
 .PHONY: *
