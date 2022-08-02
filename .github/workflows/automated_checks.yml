@@ -1,5 +1,7 @@
 name: Automated checks
-on: [push, pull_request]
+on:
+  push:
+    paths: ["**/*.py", "pyproject.toml"]
 jobs:  
   checks:
     runs-on: ubuntu-latest
