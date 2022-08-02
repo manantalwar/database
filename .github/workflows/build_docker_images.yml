@@ -1,7 +1,7 @@
 name: Build Docker images
 on:
   push:
-    paths: ["**/Dockerfile", "docker-compose.yml"]
+    paths: ["**/Dockerfile", "**/.dockerignore", "docker-compose.yml"]
 jobs:  
   build-docker-images:
     runs-on: ubuntu-latest
