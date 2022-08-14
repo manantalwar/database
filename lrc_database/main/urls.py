@@ -86,11 +86,11 @@ SHIFT_URLS: URLs = [
 ]
 
 USER_URLS: URLs = [
-    path("users/create", create_user, name="create_user"),
-    path("users/create/bulk", create_users_in_bulk, name="create_users_in_bulk"),
+    path("users/", list_users, name="list_users"),
     path("users/<int:user_id>", user_profile, name="user_profile"),
     path("users/<int:user_id>/edit", edit_profile, name="edit_profile"),
-    path("users/<str:group>", list_users, name="list_users"),
+    path("users/create", create_user, name="create_user"),
+    path("users/create/bulk", create_users_in_bulk, name="create_users_in_bulk"),
     path("users/groups/<str:group>", list_users, name="list_users"),
 ]
 

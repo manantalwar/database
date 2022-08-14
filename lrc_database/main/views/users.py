@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -155,6 +155,10 @@ def create_users_in_bulk(request: HttpRequest) -> HttpResponse:
 
 @restrict_to_groups("Office staff", "Supervisors")
 @restrict_to_http_methods("GET")
-def list_users(request: HttpRequest, group: str) -> HttpResponse:
-    users = get_list_or_404(User.objects.order_by("last_name"), groups__name=group)
+def list_users(request: HttpRequest, group: Optional[str] = None) -> HttpResponse:
+    if group is not None:
+        users = get_list_or_404(User.objects.order_by("last_name"), groups__name=group)
+    else:
+        group = "All users"
+        users = get_list_or_404(User.objects.order_by("last_name"))
     return render(request, "users/list_users.html", {"users": users, "group": group})

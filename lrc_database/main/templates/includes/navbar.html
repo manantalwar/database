@@ -29,6 +29,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbar-account-dropdown">
                             <li><h6 class="dropdown-header">List users</h6></li>
+                            <li><a class="dropdown-item" href="{% url 'list_users' %}">All users</a></li>
                             <li><a class="dropdown-item" href="{% url 'list_users' 'SIs' %}">SI leaders</a></li>
                             <li><a class="dropdown-item" href="{% url 'list_users' 'Tutors' %}">Tutors</a></li>
                             <li><a class="dropdown-item" href="{% url 'list_users' 'Office staff' %}">Office staff</a></li>
