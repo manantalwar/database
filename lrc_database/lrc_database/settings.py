@@ -14,7 +14,9 @@ import os
 from pathlib import Path
 from typing import List
 
+import sentry_sdk
 from django.contrib import messages
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -161,3 +163,9 @@ Relevant documentation:
 
 Also see the messages.html template.
 """
+
+
+# Sentry
+
+if SENTRY_DSN := os.environ.get("SENTRY_DSN"):
+    sentry_sdk.init(dsn=SENTRY_DSN, integrations=[DjangoIntegration()], traces_sample_rate=1.0, send_default_pii=True)
