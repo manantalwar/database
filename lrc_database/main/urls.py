@@ -1,5 +1,6 @@
 from typing import List, Union
 
+from django.contrib.auth import views as auth_views
 from django.urls import URLPattern, URLResolver, include, path
 
 from .views import index
@@ -32,7 +33,14 @@ URLs = List[Union[URLPattern, URLResolver]]
 
 MISC_URLS: URLs = [
     path("", index, name="index"),
-    path("accounts/", include("django.contrib.auth.urls")),
+]
+
+AUTHENTICATION_URLS: URLs = [
+    # path("accounts/", include("django.contrib.auth.urls")),
+    path("accounts/login/", auth_views.LoginView.as_view(), name="login"),
+    path("accounts/logout/", auth_views.LogoutView.as_view(), name="logout"),
+    path("accounts/password_change/", auth_views.PasswordChangeView.as_view(), name="password_change"),
+    path("accounts/password_change/done/", auth_views.PasswordChangeDoneView.as_view(), name="password_change_done"),
 ]
 
 API_URLS: URLs = [
@@ -97,6 +105,7 @@ HARDWARE_LOAN_URLS: URLs = [
 
 urlpatterns: URLs = (
     MISC_URLS
+    + AUTHENTICATION_URLS
     + API_URLS
     + COURSE_URLS
     + SHIFT_CHANGE_REQUEST_URLS
