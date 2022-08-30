@@ -254,6 +254,18 @@ BETA_USERS = {
     "zeke": {"first_name": "Zeke", "last_name": "Shenk", "email": "zekeshenk-nospam@umass.edu"},
     "maria": {"first_name": "Maria", "last_name": "Polino", "email": "mariapolino-nospam@umass.edu"},
     "kereth": {"first_name": "Kereth", "last_name": "Cowe-Spigai", "email": "kerethcowespigai-nospam@umass.edu"},
+    "matthew": {"first_name": "Matthew", "last_name": "DiStefano", "email": "matthewdistefano-nospam@umass.edu"},
+    "vandrey": {"first_name": "Vandrey", "last_name": "Sisson", "email": "vandreysisson-nospam@umass.edu"},
+    "daniel": {"first_name": "Daniel", "last_name": "Degenaro", "email": "danieldegenaro-nospam@umass.edu"},
+    "lily": {"first_name": "Lily", "last_name": "Gao", "email": "lilygao-nospam@umass.edu"},
+    "kristen": {"first_name": "Kristen", "last_name": "Hekimian", "email": "kristenhekimian-nospam@umass.edu"},
+    "veronika": {"first_name": "Veronika", "last_name": "Jaster", "email": "veronikajaster-nospam@umass.edu"},
+    "manan": {"first_name": "Manan", "last_name": "Talwar", "email": "manantalwar-nospam@umass.edu"},
+    "tirth": {"first_name": "Tirth", "last_name": "Patel", "email": "tirthpatel-nospam@umass.edu"},
+    "dasol": {"first_name": "Dasol", "last_name": "Song", "email": "dasolsong-nospam@umass.edu"},
+    "ava": {"first_name": "Ava", "last_name": "Dawley", "email": "avadawley-nospam@umass.edu"},
+    "ana": {"first_name": "Ana", "last_name": "Belen", "email": "anabelen-nospam@umass.edu"},
+    "moscoso": {"first_name": "Moscoso", "last_name": "Gonzales", "email": "moscosogonzales-nospam@umass.edu"},
 }
 
 
