@@ -266,6 +266,7 @@ BETA_USERS = {
     "ava": {"first_name": "Ava", "last_name": "Dawley", "email": "avadawley-nospam@umass.edu"},
     "ana": {"first_name": "Ana", "last_name": "Belen", "email": "anabelen-nospam@umass.edu"},
     "moscoso": {"first_name": "Moscoso", "last_name": "Gonzales", "email": "moscosogonzales-nospam@umass.edu"},
+    "aadam": {"first_name": "Aadam", "last_name": "Lokhandwala", "email": "aadamlokhandwala-nospam@umass.edu"},
 }
 
 
