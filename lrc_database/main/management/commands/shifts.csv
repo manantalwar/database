@@ -1,0 +1,16 @@
+id,first_name,last_name,email,course,date,start_time,end_time,location
+"665734","Aadam","Lokhandwala","alokhandwala@umass.edu","COMPSCI-230","2022-12-08","20:30:00","21:45:00","ILC N111"
+"665730","Aadam","Lokhandwala","alokhandwala@umass.edu","COMPSCI-230","2022-12-06","19:00:00","20:15:00","LGRC A301"
+"665726","Aadam","Lokhandwala","alokhandwala@umass.edu","COMPSCI-230","2022-12-01","20:30:00","21:45:00","ILC N111"
+"659652","Ava ","Dawley ","amdawley@umass.edu","PHYSICS-131","2022-12-11","17:30:00","18:45:00","W.E.B. DuBois LIBR 1206"
+"659650","Ava ","Dawley ","amdawley@umass.edu","PHYSICS-131","2022-12-07","19:00:00","20:15:00","W.E.B. DuBois LIBR 1206"
+"659642","Ava ","Dawley ","amdawley@umass.edu","PHYSICS-131","2022-12-04","17:30:00","18:45:00","W.E.B. DuBois LIBR 1206"
+"664164","Dasol","Song","dsong@umass.edu","BIOLOGY-311","2022-12-12","19:00:00","20:15:00",
+"664160","Dasol","Song","dsong@umass.edu","BIOLOGY-311","2022-12-07","19:00:00","20:15:00","W.E.B. DuBois LIBR 1203"
+"664156","Dasol","Song","dsong@umass.edu","BIOLOGY-311","2022-12-05","19:00:00","20:15:00","W.E.B. DuBois LIBR 1203"
+"681557","Manan","Talwar","mtalwar@umass.edu","COMPSCI-250","2022-12-12","17:30:00","18:45:00",NULL
+"666056","Manan","Talwar","mtalwar@umass.edu","COMPSCI-250","2022-12-07","20:30:00","21:45:00","W.E.B DuBois 1203"
+"666052","Manan","Talwar","mtalwar@umass.edu","COMPSCI-250","2022-12-05","17:30:00","18:45:00","W.E.B. DuBois LIBR 1203"
+"678678","Tirth ","Patel ","ttpatel@umass.edu","CHEM-111","2022-12-08","20:30:00","21:45:00","ISB 321"
+"678674","Tirth ","Patel ","ttpatel@umass.edu","CHEM-111","2022-12-06","20:30:00","21:45:00","ISB 321"
+"681479","Tirth ","Patel ","ttpatel@umass.edu","CHEM-111","2022-12-01","20:30:00","21:45:00",NULL

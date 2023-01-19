@@ -1,8 +1,10 @@
 from typing import TypedDict, Union
 
+from django.db.models import Q
 from django.http.request import HttpRequest
 
-from .models import SIShiftChangeRequest, TutorShiftChangeRequest
+from .models import ShiftChangeRequest
+from .templatetags.groups import is_privileged
 
 
 class AlertCountDict(TypedDict):
@@ -21,12 +23,22 @@ def alert_counts(request: HttpRequest) -> Union[AlertCountDict, EmptyDict]:
     the navbar.
     """
 
+    # If user is not signed in, do no queries.
     if not request.user.is_authenticated:
         return {}
-    if not request.user.groups.filter(name__in=("Office staff", "Supervisors")).exists():
+
+    # If user doesn't have permission to manage shift change requests, do no queries.
+    if not is_privileged(request.user):
         return {}
-    si_count = SIShiftChangeRequest.objects.filter(target__kind="SI").count()
-    tutoring_count = TutorShiftChangeRequest.objects.filter(target__kind="Tutoring").count()
+
+    si_count = ShiftChangeRequest.objects.filter(
+        (Q(new_kind="SI") | Q(shift_to_update__kind="SI")), state="New"
+    ).count()
+
+    tutoring_count = ShiftChangeRequest.objects.filter(
+        (Q(new_kind="Tutoring") | Q(shift_to_update__kind="Tutoring")), state="New"
+    ).count()
+
     return {
         "pending_si_change_count": si_count,
         "pending_tutoring_change_count": tutoring_count,

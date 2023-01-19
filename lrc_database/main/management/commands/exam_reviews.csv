@@ -1,0 +1,11 @@
+id,first_name,last_name,email,course,date,start_time,end_time,location
+"681607","Aadam","Lokhandwala","alokhandwala@umass.edu","COMPSCI-230","2022-12-12","16:00:00","18:00:00","GSMN 64"
+"681605","Aadam","Lokhandwala","alokhandwala@umass.edu","COMPSCI-230","2022-12-11","17:00:00","19:00:00","ILC S331"
+"681635","Ava ","Dawley ","amdawley@umass.edu","PHYSICS-131","2022-12-14","17:00:00","19:00:00","BART 65"
+"681501","Dasol","Song","dsong@umass.edu","BIOLOGY-311","2022-12-19","18:00:00","19:30:00","ILC S211"
+"681499","Dasol","Song","dsong@umass.edu","BIOLOGY-311","2022-12-18","17:00:00","18:30:00","ILC S211"
+"681559","Manan","Talwar","mtalwar@umass.edu","COMPSCI-250","2022-12-13","17:00:00","19:00:00","ILC S331"
+"666062","Manan","Talwar","mtalwar@umass.edu","COMPSCI-250","2022-12-12","19:00:00","21:00:00","ILC S331"
+"681655","Tirth ","Patel ","ttpatel@umass.edu","CHEM-111","2022-12-18","16:00:00","18:00:00","ISB 135"
+"681683","Tirth ","Patel ","ttpatel@umass.edu","CHEM-111","2022-12-16","15:00:00","17:00:00","ISB 135"
+"678670","Tirth ","Patel ","ttpatel@umass.edu","CHEM-111","2022-12-01","17:30:00","19:30:00","ILC S331"

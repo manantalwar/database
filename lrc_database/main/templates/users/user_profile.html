@@ -63,6 +63,26 @@
                     {% endif %}
                 </div>
             </div>
+            {% if user.id == target_user.id %}
+                <br />
+                <div class="card">
+                    <div class="card-header">
+                        Operations
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">
+                            <ul>
+                                {% if target_user|is_si %}
+                                    <li><a href="{% url 'new_shift_request' %}">Schedule new session</a></li>
+                                {% elif target_user|is_tutor %}
+                                    <li><a href="{% url 'new_shift_tutors_only' %}">Schedule new shift</a></li>
+                                {% endif %}
+                                <li><a href="{% url 'view_shift_change_requests_by_user' user.id %}">View shift change requests</a></li>
+                            </ul>
+                        </p>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

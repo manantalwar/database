@@ -12,7 +12,7 @@ RUN apk add \
     py3-pip
 
 # Tell Poetry not to create a virtualenv so that packages are installed globally, and install runtime dependencies specified by pyproject.toml
-WORKDIR /srv
+WORKDIR /srv/db
 COPY pyproject.toml .
 RUN poetry config virtualenvs.create false && poetry install \
     --no-ansi \ 
@@ -26,5 +26,8 @@ ENV PYTHONPATH "${PYTHONPATH}:/usr/lib/python3.10/site-packages"
 # Set launch command
 CMD gunicorn --bind 0.0.0.0:8000 lrc_database.wsgi
 
-# Copy project code to /srv (keep this the last step to take advantage of image caching)
+# Copy project code to /srv/db (keep this close to the last step to take advantage of image caching)
 COPY lrc_database/ .
+
+# Collect static files into volume where nginx can find them
+RUN ./manage.py collectstatic --no-input

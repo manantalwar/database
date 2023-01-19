@@ -1,29 +1,49 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>New {{ kind }} change requests</h2>
+<h2>{{ kind }} shift change requests</h2>
 
+<!--
 <div class="add-btn">
     <button type="button" class="btn btn-primary" style="background-color:gray">
         View New
     </button>
-    <a href="{% url 'view_approved_shift_change_requests' kind %}">
+    <a href="{ % url 'view_approved_shift_change_requests' kind %}">
         <button type="button" class="btn btn-primary">
             View Approved
         </button>
     </a>
-    <a href="{% url 'view_denied_shift_change_requests' kind %}">
+    <a href="{ % url 'view_denied_shift_change_requests' kind %}">
         <button type="button" class="btn btn-primary">
             View Denied
         </button>
     </a>
     {% if kind == "SI" %}
-    <a href="{% url 'view_pending_shift_change_requests' kind %}">
+    <a href="{ % url 'view_pending_shift_change_requests' kind %}">
         <button type="button" class="btn btn-primary">
             View Pending
         </button>
     </a>
     {% endif %}
 </div>
+-->
+
+{% if state == "New" or state == "Approved" or state == "Pending" or state == "Not Approved" %}
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link {% if state == "New" %} active {% endif %}" aria-current="page" href="{% url 'view_shift_change_requests' 'SI' 'New' %}">New</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if state == "Approved" %} active {% endif %}" aria-current="page" href="{% url 'view_shift_change_requests' 'SI' 'Approved' %}">Approved</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if state == "Not Approved" %} active {% endif %}" aria-current="page" href="{% url 'view_shift_change_requests' 'SI' 'Not Approved' %}">Not Approved</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if state == "Pending" %} active {% endif %}" aria-current="page" href="{% url 'view_shift_change_requests' 'SI' 'Pending' %}">Pending</a>
+    </li>
+</ul>
+{% endif %}
+
 {% include "includes/shift_change_request_table.html" %}
 {% endblock %}

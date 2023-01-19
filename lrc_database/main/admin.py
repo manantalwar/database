@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Course, Hardware, Loan, LRCDatabaseUser, Shift, SIShiftChangeRequest, TutorShiftChangeRequest
+from .models import Course, Hardware, Loan, LRCDatabaseUser, Shift, ShiftChangeRequest
 
 
 @admin.register(Course)
@@ -24,74 +24,32 @@ class ShiftAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(SIShiftChangeRequest)
-class SIShiftChangeRequestAdmin(admin.ModelAdmin):
+@admin.register(ShiftChangeRequest)
+class ShiftChangeRequestAdmin(admin.ModelAdmin):
     fieldsets = (
         (
             "Approval",
             {
                 "fields": (
-                    "target",
+                    "shift_to_update",
                     "reason",
-                    "request_state",
-                    "approved_by",
-                    "approved_on",
+                    "state",
+                    # "approved_by",
+                    # "approved_on",
                 )
             },
         ),
         (
             "New data",
-            {
-                "fields": (
-                    "new_start",
-                    "new_duration",
-                    "new_location",
-                )
-            },
+            {"fields": ("new_associated_person", "new_start", "new_duration", "new_location", "new_kind")},
         ),
     )
     list_display = (
-        "target",
+        "shift_to_update",
         "reason",
-        "request_state",
-        "approved_by",
-        "approved_on",
-    )
-
-
-@admin.register(TutorShiftChangeRequest)
-class TutorShiftChangeRequestAdmin(admin.ModelAdmin):
-    fieldsets = (
-        (
-            "Approval",
-            {
-                "fields": (
-                    "target",
-                    "reason",
-                    "request_state",
-                    "approved_by",
-                    "approved_on",
-                )
-            },
-        ),
-        (
-            "New data",
-            {
-                "fields": (
-                    "new_associated_person",
-                    "new_start",
-                    "new_duration",
-                    "new_location",
-                )
-            },
-        ),
-    )
-    list_display = (
-        "target",
-        "reason",
-        "request_state",
-        "approved_by",
-        "approved_on",
+        "state",
+        # "approved_by",
+        # "approved_on",
     )
 
 

@@ -15,6 +15,41 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css" integrity="sha256-5veQuRbWaECuYxwap/IOE/DAwNxgm4ikX7nrgsqYp88=" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.js" integrity="sha256-YicH/8aE660iEnJtgll3vT54dJApy3XkYmqNfGVFEzA=" crossorigin="anonymous"></script>
 
+        <!-- air-datepicker -->
+        <script>
+            const airDatepickerEnglishLocale = {
+                days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+                daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                daysMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+                months: ['January','February','March','April','May','June', 'July','August','September','October','November','December'],
+                monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                today: 'Today',
+                clear: 'Clear',
+                dateFormat: 'MM/dd/yyyy',
+                timeFormat: 'hh:mm aa',
+                firstDay: 0
+            };
+        </script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/air-datepicker@3.3.3/air-datepicker.css" integrity="sha256-AJquhP7FO+rLw8EmeEKLbKlgofFqCZAc5bus194dsbI=" crossorigin="anonymous">
+        <!-- <script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.3.3/locale/en.js" integrity="sha256-QXBI00RzBvtHX7w7ObLPDNu6VZqjshZKfjh3ULq+KGM=" crossorigin="anonymous"></script> -->
+        <script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.3.3/air-datepicker.js" integrity="sha256-4zQWlVIg2idVlSPQhcs8HIz6zaVOgif6F5yOdac32K4=" crossorigin="anonymous"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                new AirDatepicker('.datetimeinput', {
+                    timepicker: true,
+                    locale: airDatepickerEnglishLocale,
+                    dateFormat: "yyyy-MM-dd",
+                    timeFormat: "hh:mm AA",
+                    minHours: 9,
+                    maxHours: 21,
+                    minutesStep: 15
+                });
+            });
+        </script>
+
+        <!-- html-duration-picker -->
+        <script src="https://cdn.jsdelivr.net/npm/html-duration-picker@latest/dist/html-duration-picker.min.js"></script>
+
         <!-- Custom CSS -->
         <link rel="stylesheet" href="{% static 'css/main.css' %}" />
 
@@ -24,9 +59,6 @@
     <body>
         {% include "includes/navbar.html" %}
         <div class="container" id="main-container">
-            <div class="alert alert-info" role="alert">
-                You are using a development version of the database. Please remember that this website is mostly populated with fake data, and that it is reset every few hours (expect the site to go down briefly when this happens). Don't save any information you care about here. You can review the testing plan <a href="https://docs.google.com/document/d/1llD6EiCqrkPKCd4UWxlsqJ4CIM-wARfLm97-2KImYo4/edit">here</a> and use <a href="https://forms.gle/98Vq2Y2upWXQPiWq8">this form</a> to share your thoughts with us.
-            </div>
             {% for message in messages %}
                 <div class="alert {% if message.level_tag %} alert-{{ message.level_tag }} {% endif %} {{ message.extra_tags }}" role="alert">
                     {{ message|safe }}
@@ -35,6 +67,9 @@
             {% block content %}
                 <p>This is a template. You shouldn't be seeing this!</p>
             {% endblock %}
+            <div align="center">
+                For help, email <a href="mailto:lrc@umass.edu">lrc@umass.edu</a>. To suggest features or report bugs, visit this project on <a href="https://github.com/umass-lrc/database">GitHub</a>.
+            </div>
         </div>
     </body>
 </html>

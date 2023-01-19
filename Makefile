@@ -1,5 +1,5 @@
 run:
-	LRC_DATABASE_SECRET_KEY=abc123 LRC_DATABASE_DEBUG=1 ./lrc_database/manage.py runserver
+	LRC_DATABASE_SECRET_KEY=abc123 LRC_DATABASE_DEBUG=1 ./lrc_database/manage.py runserver 0.0.0.0:8000
 
 run_docker:
 	LRC_DATABASE_SECRET_KEY=abc123 docker compose up
@@ -40,7 +40,21 @@ reset_database:
 	./lrc_database/manage.py migrate
 	./lrc_database/manage.py bootstrapdatabase
 
+migrate:
+	./lrc_database/manage.py makemigrations main
+	./lrc_database/manage.py migrate
+
 install_git_hooks:
 	cp .git-hooks/* .git/hooks
+
+install_systemd_service:
+	cp lrc-database.service /etc/systemd/system/lrc-database.service
+	systemctl daemon-reload
+
+restart:
+	systemctl restart lrc-database.service
+
+logs:
+	journalctl -u lrc-database.service
 
 .PHONY: *

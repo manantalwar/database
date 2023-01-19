@@ -28,6 +28,10 @@ SECRET_KEY = os.environ.get("LRC_DATABASE_SECRET_KEY", "INSECURE-REPLACE-ME")
 
 ALLOWED_HOSTS: List[str] = os.environ.get("LRC_DATABASE_ALLOWED_HOSTS", ".localhost,127.0.0.1,[::1]").split(",")
 
+CSRF_TRUSTED_ORIGINS = ["http://3.139.14.216:80"]
+
+CORS_ORIGIN_WHITELIST = ["http://3.139.14.216:80"]
+
 DEBUG = os.environ.get("LRC_DATABASE_DEBUG", "0") == "1"
 
 
@@ -117,7 +121,7 @@ TIME_ZONE = "America/New_York"
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False  # True
 
 USE_TZ = True
 
@@ -126,6 +130,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = "/static/"
+
+STATIC_ROOT = "/srv/static"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -147,6 +153,11 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 
+# Form input formats
+
+DATETIME_INPUT_FORMATS = ["%Y-%m-%d %I:%M %p"]
+
+
 # Messages
 
 MESSAGE_TAGS = {
@@ -164,6 +175,16 @@ Relevant documentation:
 Also see the messages.html template.
 """
 
+
+# Email
+
+EMAIL_BACKEND = "django_ses.SESBackend"
+
+# AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are set via environment variables
+
+AWS_SES_REGION_NAME = "us-east-2"
+
+AWS_SES_REGION_ENDPOINT = "email.us-east-2.amazonaws.com"
 
 # Sentry
 

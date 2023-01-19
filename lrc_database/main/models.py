@@ -1,6 +1,7 @@
 import datetime
 
 import pytz
+from django import forms
 from django.contrib.auth.models import AbstractUser
 from django.core import validators
 from django.db import models
@@ -56,16 +57,20 @@ class Shift(models.Model):
         on_delete=models.CASCADE,
         help_text="The person who is associated with this work shift.",
     )
+
     start = models.DateTimeField(help_text="The time that the shift starts.")
+
     duration = models.DurationField(help_text="How long the shift will last, in HH:MM:SS format.")
+
     location = models.CharField(
         max_length=32,
         help_text="The location where the shift will be occur, e.g. GSMN 64.",
     )
+
     kind = models.CharField(
         max_length=8,
         choices=(("SI", "SI"), ("Tutoring", "Tutoring")),
-        help_text="The kind of shift this is.",
+        help_text="The kind of shift this is: tutoring or SI.",
     )
 
     @staticmethod
@@ -84,136 +89,69 @@ class Shift(models.Model):
         return f"{self.associated_person} in {self.location} at {self.start.astimezone(tz)}"
 
 
-class SIShiftChangeRequest(models.Model):
-    target = models.ForeignKey(
+class ShiftChangeRequest(models.Model):
+    shift_to_update = models.ForeignKey(
         to=Shift,
-        related_name="si_shift_change_request_target",
+        related_name="shift_change_request_target",
         on_delete=models.CASCADE,
-        help_text="Shift to edit.",
+        blank=True,
+        null=True,
+        default=None,
+        help_text="Shift to edit. If none, this change request will create a new shift when approved.",
     )
 
     reason = models.CharField(
         max_length=512,
-        help_text="Explanation for why this change is being requested.",
+        help_text="Explanation for why this new shift or shift change is being requested.",
     )
 
-    request_state = models.CharField(
+    state = models.CharField(
         max_length=40,
         choices=(("Approved", "Approved"), ("Pending", "Pending"), ("Not Approved", "Not Approved"), ("New", "New")),
         help_text="The kind of shift this is.",
     )
-    approved_by = models.ForeignKey(
-        to=LRCDatabaseUser,
-        related_name="si_shift_change_request_approved_by",
-        blank=True,
-        null=True,
-        default=None,
-        on_delete=models.CASCADE,
-        help_text="The user (if any) who approved the change request.",
-    )
 
-    approved_on = models.DateTimeField(help_text="When the request was approved.", blank=True, null=True, default=None)
-
-    new_start = models.DateTimeField(
-        blank=True,
-        null=True,
-        default=None,
-        help_text="The new time that the shift starts if this request is approved.",
-    )
-    new_duration = models.DurationField(
-        blank=True,
-        null=True,
-        default=None,
-        help_text="How long the shift will last, in HH:MM:SS format, if this request is approved.",
-    )
-    new_location = models.CharField(
-        max_length=32,
-        blank=True,
-        null=True,
-        default=None,
-        help_text="The new location where this shift will occur, e.g. GSMN 64, if this request is approved.",
-    )
-
-    def send_to_pending(self):
-        self.request_state = "Pending"
-
-    def send_to_denied(self):
-        self.request_state = "Not Approved"
-
-    def send_to_approved(self):
-        self.request_state = "Approved"
-        self.target.start = self.new_start
-        self.target.duration = self.new_duration
-
-
-class TutorShiftChangeRequest(models.Model):
-    target = models.ForeignKey(
-        to=Shift,
-        related_name="tutor_shift_change_request_target",
-        on_delete=models.CASCADE,
-        help_text="Shift to edit.",
-    )
-    reason = models.CharField(
-        max_length=512,
-        help_text="Explanation for why this change is being requested.",
-    )
-
-    request_state = models.CharField(
-        max_length=40,
-        choices=(("Approved", "Approved"), ("Not Approved", "Not Approved"), ("New", "New")),
-        help_text="The kind of shift this is.",
-    )
-    approved_by = models.ForeignKey(
-        to=LRCDatabaseUser,
-        related_name="tutor_shift_change_request_approved_by",
-        blank=True,
-        null=True,
-        default=None,
-        on_delete=models.CASCADE,
-        help_text="The user (if any) who approved the change request.",
-    )
-    approved_on = models.DateTimeField(
-        help_text="When the request was approved.",
-        blank=True,
-        null=True,
-        default=None,
-    )
+    is_drop_request = models.BooleanField(default=False)
 
     new_associated_person = models.ForeignKey(
         to=LRCDatabaseUser,
-        related_name="tutor_shift_change_request_new_associated_person",
         on_delete=models.CASCADE,
+        blank=True,
         null=True,
         default=None,
-        help_text="The new person who will be associated with this shift if this request is approved.",
+        help_text="The person who is associated with this work shift.",
     )
+
     new_start = models.DateTimeField(
         blank=True,
         null=True,
         default=None,
-        help_text="The new time that the shift starts if this request is approved.",
+        help_text="The date time that the shift starts if this request is approved.",
     )
+
     new_duration = models.DurationField(
         blank=True,
         null=True,
         default=None,
         help_text="How long the shift will last, in HH:MM:SS format, if this request is approved.",
     )
+
     new_location = models.CharField(
         max_length=32,
         blank=True,
         null=True,
         default=None,
-        help_text="The new location where this shift will occur, e.g. GSMN 64, if this request is approved.",
+        help_text="The location where this shift will occur, e.g. GSMN 64, if this request is approved.",
     )
 
-    def send_to_denied(self):
-        self.request_state = "Not Approved"
-
-    def send_to_approved(self):
-        self.request_state = "Approved"
-        self.target.start = self.new_start
-        self.target.duration = self.new_duration
+    new_kind = models.CharField(
+        max_length=8,
+        choices=(("SI", "SI"), ("Tutoring", "Tutoring")),
+        blank=True,
+        null=True,
+        default=None,
+        help_text="The kind of shift this is: tutoring or SI.",
+    )
 
 
 class Hardware(models.Model):

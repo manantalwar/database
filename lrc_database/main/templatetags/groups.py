@@ -1,3 +1,5 @@
+from typing import Any
+
 from django import template
 
 from ..models import LRCDatabaseUser
@@ -38,4 +40,11 @@ def is_privileged(user: LRCDatabaseUser) -> bool:
 
     This should probably be renamed at some point.
     """
+
     return is_in_groups(user, "Office staff", "Supervisors")
+
+
+# TODO: Move from this file
+@register.filter
+def or_na(x: Any) -> Any:
+    return x if x else "N/A"

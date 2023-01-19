@@ -18,8 +18,8 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbar-account-dropdown">
                             <li><h6 class="dropdown-header">Pending shift change requests</h6></li>
-                            <li><a class="dropdown-item" href="{% url 'view_shift_change_requests' 'SI' %}">SI requests <span class="badge bg-secondary">{{ pending_si_change_count }}</span></a></li>
-                            <li><a class="dropdown-item" href="{% url 'view_shift_change_requests' 'Tutoring' %}">Tutoring requests <span class="badge bg-secondary">{{ pending_tutoring_change_count }}</span></a></li>
+                            <li><a class="dropdown-item" href="{% url 'view_shift_change_requests' 'SI' 'New' %}">SI requests <span class="badge bg-secondary">{{ pending_si_change_count }}</span></a></li>
+                            <li><a class="dropdown-item" href="{% url 'view_shift_change_requests' 'Tutoring' 'New' %}">Tutoring requests <span class="badge bg-secondary">{{ pending_tutoring_change_count }}</span></a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -56,6 +56,7 @@
                             Shifts
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbar-account-dropdown">
+                            <li><a class="dropdown-item" href="{% url 'new_shift' %}">Schedule new shift</a></li>
                             <li><a class="dropdown-item" href="{% url 'drop_shifts_on_date' %}">Drop shifts on date</a></li>
                             <li><a class="dropdown-item" href="{% url 'swap_shift_dates' %}">Swap shift dates</a></li>
                             <li><a class="dropdown-item" href="{% url 'move_shifts_from_date' %}">Move shifts from date</a></li>

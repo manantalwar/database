@@ -1,1 +1,13 @@
-.gitignore
+# Python
+**/__pycache__/
+.venv/
+poetry.lock
+.venv/
+
+# SQLite
+**/*.sqlite3
+**/*.sqlite3-journal
+
+# Editors and tools
+**/.mypy_cache/
+**/.vscode/

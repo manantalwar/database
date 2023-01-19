@@ -1,44 +1,32 @@
 <table class="table table-striped table-hover">
     <thead>
         <tr>
+            <th scope="col">User</th>
+            <th scope="col">New shift date</th>
             <th scope="col">Reason</th>
-            <th scope="col">Current State</th>
-            <th scope="col">Approver</th>
+            <th scope="col">State</th>
             <th scope="col">View</th>
         </tr>
     </thead>
     <tbody>
         {% for change_request in change_requests %}
-        <tr>
-            <td>{{ change_request.reason }}</td>
-            <td>{{ change_request.request_state }}</td>
-            <td>
-                {% if change_request.approved %}
-                <a href="{% url 'user_profile' change_request.approved_by.id %}">{{ change_request.approved_by }}</a>
-                {% else %}
-                N/A
-                {% endif %}
-            </td>
-            <td>
-                {% if change_request.request_state == "New" %}
-                <a href="{% url 'view_single_request' change_request.target.kind change_request.id %}">View</a>
-                {% elif change_request.request_state == "Approved" %}
-                <a href="{% url 'view_approved_single_request' change_request.target.kind change_request.id %}">View</a>
-                {% elif change_request.request_state == "Not Approved" %}
-                <a href="{% url 'view_denied_single_request' change_request.target.kind change_request.id %}">View</a>
-                {% else %}
-                <a href="{% url 'view_pending_single_request' change_request.target.kind change_request.id %}">View</a>
-                {% endif %}
-            </td>
-        </tr>
+            <tr>
+                <td>{{ change_request.new_associated_person }}</td>
+                <td>{{ change_request.new_start }}</td>
+                <td>{{ change_request.reason }}</td>
+                <td>{{ change_request.state }}</td>
+                <td>
+                    <a href="{% url 'view_single_request' change_request.id %}">View</a>
+                </td>
+            </tr>
         {% empty %}
-        <tr>
-            <td colspan="3">
-                <div align="center">
-                    <em>None.</em>
-                </div>
-            </td>
-        </tr>
+            <tr>
+                <td colspan="5">
+                    <div align="center">
+                        <em>None.</em>
+                    </div>
+                </td>
+            </tr>
         {% endfor %}
     </tbody>
 </table>

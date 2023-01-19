@@ -10,13 +10,13 @@ services:
       LRC_DATABASE_SECRET_KEY: ${LRC_DATABASE_SECRET_KEY}
       PYTHONDONTWRITEBYTECODE: 1
     volumes:
-      - ./lrc_database/db.sqlite3:/srv/db.sqlite3
-      - static-content:/srv/main/static
+      - ./lrc_database/db.sqlite3:/srv/db/db.sqlite3
+      - static-content:/srv/static
     restart: always
   proxy:
     build: ./nginx
     ports:
-      - 80:80
+      - 8000:8000
     depends_on:
       - app
     volumes:

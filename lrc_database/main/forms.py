@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import Group
 
-from .models import Course, Hardware, Loan, LRCDatabaseUser, Shift, SIShiftChangeRequest, TutorShiftChangeRequest
+from .models import Course, Hardware, Loan, LRCDatabaseUser, Shift, ShiftChangeRequest
 
 
 class CourseForm(forms.ModelForm):
@@ -22,47 +22,51 @@ class CreateUsersInBulkForm(forms.Form):
     user_data = forms.CharField(widget=forms.Textarea)
 
 
-class SIApproveRequestForm(forms.ModelForm):
-    class Meta:
-        model = Shift
-        fields = ("associated_person", "start", "duration", "location")
-
-
 class EditProfileForm(forms.ModelForm):
     class Meta:
         model = LRCDatabaseUser
         fields = ("first_name", "last_name", "email")
 
 
-class NewSIChangeRequestForm(forms.ModelForm):
+class ApproveChangeRequestForm(forms.ModelForm):
     class Meta:
-        model = SIShiftChangeRequest
-        fields = (
-            "reason",
-            "new_start",
-            "new_duration",
-            "new_location",
-        )
+        model = Shift
+        fields = ("associated_person", "start", "duration", "location", "kind")
 
 
-class NewTutorChangeRequestForm(forms.ModelForm):
+class NewChangeRequestForm(forms.ModelForm):
     class Meta:
-        model = TutorShiftChangeRequest
-        fields = (
-            "reason",
-            "new_associated_person",
-            "new_start",
-            "new_duration",
-            "new_location",
-        )
+        model = ShiftChangeRequest
+        fields = ("reason", "new_start", "new_duration", "new_location", "new_kind")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # self.fields["new_start"].widget = forms.DateTimeInput()
+
+
+class NewDropRequestForm(forms.ModelForm):
+    class Meta:
+        model = ShiftChangeRequest
+        fields = ("reason",)
 
 
 class AddHardwareForm(forms.ModelForm):
     class Meta:
         model = Hardware
         fields = ("name", "is_available")
-
         widgets = {"name": forms.TextInput(attrs={"class": "form-control"})}
+
+
+class NewShiftForm(forms.ModelForm):
+    class Meta:
+        model = Shift
+        exclude = ()
+
+
+class NewShiftForTutorForm(forms.ModelForm):
+    class Meta:
+        model = Shift
+        exclude = ("associated_person", "location", "kind")
 
 
 class NewLoanForm(forms.ModelForm):

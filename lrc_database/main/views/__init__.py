@@ -1,13 +1,15 @@
-from typing import Callable, Concatenate, ParamSpec
+from typing import Callable, Concatenate, Optional, ParamSpec
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
+from django.db.models import Model
+from django.forms import ModelForm
 from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import redirect, render
 
-from ..models import SIShiftChangeRequest, TutorShiftChangeRequest
+from ..models import ShiftChangeRequest
 
 P = ParamSpec("P")
 User = get_user_model()
@@ -81,18 +83,15 @@ def index(request):
     if request.user.groups.filter(name__in=("Tutors", "SIs")).exists():
         return redirect("user_profile", request.user.id)
 
-    pending_si_shift_change_requests = SIShiftChangeRequest.objects.filter(
-        target__associated_person=request.user, request_state="New"
-    )
-    pending_tutor_shift_change_requests = TutorShiftChangeRequest.objects.filter(
-        target__associated_person=request.user, request_state="New"
+    pending_shift_change_requests = ShiftChangeRequest.objects.filter(
+        shift_to_update__associated_person=request.user, state="New"
     )
 
     return render(
         request,
         "index.html",
         {
-            "si_change_requests": pending_si_shift_change_requests,
-            "tutor_change_request": pending_tutor_shift_change_requests,
+            "si_change_requests": [],
+            "tutor_change_request": [],
         },
     )

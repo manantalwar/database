@@ -12,10 +12,11 @@ This entire page is ugly and should be redone.
         <li><strong>Location:</strong> {{ shift.location }}</li>
     </ul>
     <strong>
-        Change requests
         {% if user.id == shift.associated_person.id %}
-            <a href="{% url 'new_shift_change_request' shift.id %}">(add)</a>
-        {% endif %}:
+            Change requests (<a href="{% url 'new_shift_change_request' shift.id %}">update shift</a>, <a href="{% url 'new_drop_request' shift.id %}">drop</a>):
+        {% else %}
+            Change requests:
+        {% endif %}
     </strong>
     {% include "includes/shift_change_request_table.html" %}
 {% endblock %}
