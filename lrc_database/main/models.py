@@ -7,18 +7,19 @@ from django.core import validators
 from django.db import models
 from django.db.models.query import QuerySet
 
+from .custom_validators import validate_course_number
+
 
 class Course(models.Model):
     department = models.CharField(
         max_length=16,
         help_text="Department string, like COMPSCI or MATH.",
     )
-    number = models.IntegerField(
-        validators=[
-            validators.MinValueValidator(100),
-            validators.MaxValueValidator(999),
-        ],
-        help_text="Course number, like the 187 in COMPSCI 187.",
+    # Char field to accomodate for classes having letter in them like, "189C"
+    number = models.CharField(
+        max_length=10,
+        validators=[validate_course_number],
+        help_text="Course number, like the 189C in COMPSCI 189C.",
     )
     name = models.CharField(
         max_length=64,
