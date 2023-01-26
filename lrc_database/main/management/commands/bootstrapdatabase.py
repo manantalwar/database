@@ -150,12 +150,23 @@ def init_shift_change_requests(path: str) -> None:
 def create_groups():
     print("Creating groups...")
     group_names = ("Office staff", "SIs", "Supervisors", "Tutors")
+    course1, _ = Course.objects.update_or_create(
+        department="TEST", number=101, name="Testing is the key I."
+    )
+    course2, _ = Course.objects.update_or_create(
+        department="TEST", number=102, name="Testing is the key II."
+    )
     for group_name in group_names:
         Group.objects.create(name=group_name)
     for user in User.objects.exclude(username="admin"):
         if user.username == "si":
+            user.si_course = course1
+            user.save()
             group = Group.objects.filter(name="SIs").first()
         elif user.username == "tutor":
+            user.courses_tutored.add(course1)
+            user.courses_tutored.add(course2)
+            user.save()
             group = Group.objects.filter(name="Tutors").first()
         elif user.username == "office_staff":
             group = Group.objects.filter(name="Office staff").first()

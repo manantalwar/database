@@ -10,6 +10,8 @@ from .templatetags.groups import is_privileged
 class AlertCountDict(TypedDict):
     pending_si_change_count: int
     pending_tutoring_change_count: int
+    pending_si_drop_count: int
+    pending_tutoring_drop_count: int
     total_alert_count: int
 
 
@@ -33,14 +35,22 @@ def alert_counts(request: HttpRequest) -> Union[AlertCountDict, EmptyDict]:
 
     si_count = ShiftChangeRequest.objects.filter(
         (Q(new_kind="SI") | Q(shift_to_update__kind="SI")), state="New"
-    ).count()
-
+    )
+    si_count_change = si_count.filter(is_drop_request=False).count()
+    si_count_drop = si_count.filter(is_drop_request=True).count()
+    
     tutoring_count = ShiftChangeRequest.objects.filter(
         (Q(new_kind="Tutoring") | Q(shift_to_update__kind="Tutoring")), state="New"
-    ).count()
+    )
+    tutoring_count_change = tutoring_count.filter(is_drop_request=False).count()
+    tutoring_count_drop = tutoring_count.filter(is_drop_request=True).count()
+
+    total = si_count_change + si_count_drop + tutoring_count_change + tutoring_count_drop
 
     return {
-        "pending_si_change_count": si_count,
-        "pending_tutoring_change_count": tutoring_count,
-        "total_alert_count": si_count + tutoring_count,
+        "pending_si_change_count": si_count_change,
+        "pending_tutoring_change_count": tutoring_count_change,
+        "pending_si_drop_count": si_count_drop,
+        "pending_tutoring_drop_count": tutoring_count_drop,
+        "total_alert_count": total,
     }

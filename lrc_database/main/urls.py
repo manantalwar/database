@@ -26,8 +26,10 @@ from .views.shifts import (
     view_shift_change_request,
     view_shift_change_requests,
     view_shift_change_requests_by_user,
+    view_drop_shift_requests,
 )
 from .views.users import create_user, create_users_in_bulk, edit_profile, list_users, user_event_feed, user_profile
+from .views.schedule import view_schedule
 
 URLs = List[Union[URLPattern, URLResolver]]
 
@@ -76,6 +78,7 @@ SCHEDULING_URLS: URLs = [
     path("scheduling/shift_change_requests/<int:request_id>/deny", deny_request, name="deny_request"),
     path("scheduling/shift_change_requests/<int:request_id>/approval_form", approve_pending_request, name="approve_request"),
     path("scheduling/shift_change_requests/<str:kind>/<str:state>", view_shift_change_requests, name="view_shift_change_requests"),
+    path("scheduling/drop_shift_requests/<str:kind>/<str:state>", view_drop_shift_requests, name="view_drop_shift_requests"),
     path("scheduling/request_shift", new_shift_request, name="new_shift_request"),
     # fmt: on
 ]
@@ -102,6 +105,10 @@ USERS_URLS: URLs = [
     path("users/groups/<str:group>", list_users, name="list_users"),
 ]
 
+SCHEDULE_URL: URLs = [
+    path("schedule/<str:kind>/<str:offset>", view_schedule, name="view_schedule")
+]
+
 urlpatterns: URLs = (
-    MISC_URLS + ACCOUNTS_URLS + API_URLS + COURSES_URLS + HARDWARE_URLS + SCHEDULING_URLS + SHIFTS_URLS + USERS_URLS
+    MISC_URLS + ACCOUNTS_URLS + API_URLS + COURSES_URLS + HARDWARE_URLS + SCHEDULING_URLS + SHIFTS_URLS + USERS_URLS + SCHEDULE_URL
 )

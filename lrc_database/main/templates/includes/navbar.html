@@ -17,9 +17,12 @@
                             <span class="badge bg-secondary">{{ total_alert_count }}</span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbar-account-dropdown">
-                            <li><h6 class="dropdown-header">Pending shift change requests</h6></li>
+                            <li><h6 class="dropdown-header">Shift change requests</h6></li>
                             <li><a class="dropdown-item" href="{% url 'view_shift_change_requests' 'SI' 'New' %}">SI requests <span class="badge bg-secondary">{{ pending_si_change_count }}</span></a></li>
                             <li><a class="dropdown-item" href="{% url 'view_shift_change_requests' 'Tutoring' 'New' %}">Tutoring requests <span class="badge bg-secondary">{{ pending_tutoring_change_count }}</span></a></li>
+                            <li><h6 class="dropdown-header">Drop shift requests</h6></li>
+                            <li><a class="dropdown-item" href="{% url 'view_drop_shift_requests' 'SI' 'New' %}">SI requests <span class="badge bg-secondary">{{ pending_si_drop_count }}</span></a></li>
+                            <li><a class="dropdown-item" href="{% url 'view_drop_shift_requests' 'Tutoring' 'New' %}">Tutoring requests <span class="badge bg-secondary">{{ pending_tutoring_drop_count }}</span></a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -60,6 +63,17 @@
                             <li><a class="dropdown-item" href="{% url 'drop_shifts_on_date' %}">Drop shifts on date</a></li>
                             <li><a class="dropdown-item" href="{% url 'swap_shift_dates' %}">Swap shift dates</a></li>
                             <li><a class="dropdown-item" href="{% url 'move_shifts_from_date' %}">Move shifts from date</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbar-account-dropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Schedule
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbar-account-dropdown">
+                            <li><a class="dropdown-item" href="{% url 'view_schedule' 'All' '0' %}">All</a></li>
+                            <li><a class="dropdown-item" href="{% url 'view_schedule' 'SI' '0' %}">SI</a></li>
+                            <li><a class="dropdown-item" href="{% url 'view_schedule' 'Tutoring' '0' %}">Tutoring</a></li>
                         </ul>
                     </li>
                 {% endif %}
