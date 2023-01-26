@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% load schedule %}
+
+{% block content %}
+
+<h2>{{kind}} Schedule</h2>
+
+<div class="table-responsive">
+	<div>
+		<div class="left-table-button padding-5px-tb padding-15px-lr margin-10px-bottom">
+			{% with new_offset=offset|add:'-7' %}
+				<a href="{% url 'view_schedule' kind new_offset %}" class="table-button bg-dark"><<</a>
+			{% endwith %}
+			{% with new_offset=offset|add:'-1' %}
+				<a href="{% url 'view_schedule' kind new_offset %}" class="table-button bg-dark"><</a>
+			{% endwith %}
+		</div>
+		<div class="right-table-button  padding-5px-tb padding-15px-lr margin-10px-bottom">
+			{% with new_offset=offset|add:'1' %}
+				<a href="{% url 'view_schedule' kind new_offset %}" class="table-button bg-dark">></a>
+			{% endwith %}
+			{% with new_offset=offset|add:'7' %}
+				<a href="{% url 'view_schedule' kind new_offset %}" class="table-button bg-dark">>></a>
+			{% endwith %}
+		</div>
+	</div>
+	<table class="table table-bordered text-center equal-col">
+		<thead>
+			<tr>
+				<th scope="col" class="text-uppercase align-middle">Course</th>
+				{% for day in weekdays %}
+					<th scope="col" class="text-uppercase align-middle"><span>{{ day|date:"l" }}<span><div>{{ day|date:"m/d" }}</div></th>
+				{% endfor %}
+			</tr>
+		</thead>
+		<tbody>
+			{% for course, days in info.items %}
+				<tr>
+					<td class="align-middle"><a href="{% url 'view_course' days.0 %}">{{course}}</a></td>
+					{% for day in days.1 %}
+						{% if day|length == 0 %}
+							<td class="bg-light-gray"></td>
+						{% else %}
+							<td>
+								{% for s in day %}
+									<div class="margin-10px-top">
+										<span class="{% if s.kind == 'SI' %}bg-lightred{% else %}bg-green{% endif %} padding-5px-tb 
+											padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 
+											xs-font-size13">{{s.location}}</span>
+										<div class="margin-10px-top font-size14">{{s.start| date:"h:i A" |lower}} - {{s.start|add_datetime:s.duration|date:"h:i A"|lower}}</div>
+										<div class="font-size13"><a href="{% url 'user_profile' s.associated_person.id %}">{{s.associated_person}}</a></div>
+									</div>
+								{% endfor %}
+							</td>
+						{% endif %}
+					{% endfor %}
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}

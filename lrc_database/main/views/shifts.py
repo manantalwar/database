@@ -8,6 +8,7 @@ from django.db.models import Q
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
 from django.urls import reverse
+from django.contrib.auth import get_user_model
 
 from ..forms import (
     ApproveChangeRequestForm,
@@ -19,6 +20,8 @@ from ..forms import (
 from ..models import Shift, ShiftChangeRequest
 from ..templatetags.groups import is_privileged
 from . import restrict_to_groups, restrict_to_http_methods
+
+User = get_user_model()
 
 
 @login_required
@@ -76,11 +79,24 @@ def new_shift_change_request(request: HttpRequest, shift_id: int) -> HttpRespons
 @restrict_to_groups("Office staff", "Supervisors")
 @restrict_to_http_methods("GET")
 def view_shift_change_requests(request: HttpRequest, kind: str, state: str) -> HttpResponse:
-    requests = ShiftChangeRequest.objects.filter((Q(new_kind=kind) | Q(shift_to_update__kind=kind)), state=state)
+    if kind == "All":
+        requests = ShiftChangeRequest.objects.filter(state=state)
+    else:
+        requests = ShiftChangeRequest.objects.filter((Q(new_kind=kind) | Q(shift_to_update__kind=kind)), state=state, is_drop_request=False)
     return render(
         request,
         "scheduling/view_shift_change_requests.html",
-        {"change_requests": requests, "kind": kind, "state": state},
+        {"change_requests": requests, "kind": kind, "state": state, "drop": False},
+    )
+
+@restrict_to_groups("Office staff", "Supervisors")
+@restrict_to_http_methods("GET")
+def view_drop_shift_requests(request: HttpRequest, kind: str, state: str) -> HttpResponse:
+    requests = ShiftChangeRequest.objects.filter((Q(new_kind=kind) | Q(shift_to_update__kind=kind)), state=state, is_drop_request=True)
+    return render(
+        request,
+        "scheduling/view_shift_change_requests.html",
+        {"change_requests": requests, "kind": kind, "state": state, "drop": True},
     )
 
 
@@ -92,13 +108,14 @@ def view_shift_change_requests_by_user(request: HttpRequest, user_id: int) -> Ht
     requests = ShiftChangeRequest.objects.filter(
         (Q(new_associated_person__id=user_id) | Q(shift_to_update__associated_person__id=user_id)),
     )
+    target_user = get_object_or_404(User, id=user_id)
     return render(
         request,
         "scheduling/view_shift_change_requests.html",
-        {"change_requests": requests, "kind": f"User #{user_id}'s"},
+        {"change_requests": requests, "kind": f"{target_user.first_name}'s"},
     )
 
-
+@login_required
 @restrict_to_http_methods("GET")
 def view_shift_change_request(request: HttpRequest, request_id: int) -> HttpResponse:
     shift_request = get_object_or_404(ShiftChangeRequest, pk=request_id)
@@ -185,7 +202,7 @@ def new_shift_tutors_only(request: HttpRequest) -> HttpResponse:
         form = NewShiftForTutorForm()
         return render(
             request,
-            "generic_form.html",
+            "shifts/new_shift_request_tutors.html",
             {"form": form, "form_action_url": reverse("new_shift_tutors_only"), "form_title": "Create new shift"},
         )
     else:
@@ -228,13 +245,11 @@ def new_shift_request(request: HttpRequest) -> HttpResponse:
             return redirect("new_shift_request")
 
 
-@restrict_to_groups("SIs")
+@restrict_to_groups("SIs", "Tutors")
 @restrict_to_http_methods("GET", "POST")
 def new_drop_request(request: HttpRequest, shift_id: int) -> HttpResponse:
     shift = get_object_or_404(Shift, id=shift_id)
     if shift.associated_person != request.user:
-        print(shift.associated_person)
-        print(request.user)
         raise PermissionDenied
 
     if request.method == "GET":
@@ -251,6 +266,9 @@ def new_drop_request(request: HttpRequest, shift_id: int) -> HttpResponse:
                 shift_to_update=shift,
                 state="New",
                 is_drop_request=True,
+                new_associated_person=request.user,
+                new_kind=shift.kind,
+                new_start=shift.start,
                 # approved_by=None,
                 # approved_on=None,
                 **form.cleaned_data,

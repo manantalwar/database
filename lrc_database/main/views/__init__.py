@@ -8,6 +8,7 @@ from django.db.models import Model
 from django.forms import ModelForm
 from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import redirect, render
+from django.db.models import Q
 
 from ..models import ShiftChangeRequest
 
@@ -83,15 +84,4 @@ def index(request):
     if request.user.groups.filter(name__in=("Tutors", "SIs")).exists():
         return redirect("user_profile", request.user.id)
 
-    pending_shift_change_requests = ShiftChangeRequest.objects.filter(
-        shift_to_update__associated_person=request.user, state="New"
-    )
-
-    return render(
-        request,
-        "index.html",
-        {
-            "si_change_requests": [],
-            "tutor_change_request": [],
-        },
-    )
+    return redirect("view_shift_change_requests", "All", "New")

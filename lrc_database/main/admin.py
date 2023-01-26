@@ -44,6 +44,7 @@ class ShiftChangeRequestAdmin(admin.ModelAdmin):
             {"fields": ("new_associated_person", "new_start", "new_duration", "new_location", "new_kind")},
         ),
     )
+    ordering = ("new_start",)
     list_display = (
         "shift_to_update",
         "reason",

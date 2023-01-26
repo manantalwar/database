@@ -1,6 +1,11 @@
 run:
 	LRC_DATABASE_SECRET_KEY=abc123 LRC_DATABASE_DEBUG=1 ./lrc_database/manage.py runserver 0.0.0.0:8000
 
+win_run:
+	set LRC_DATABASE_SECRET_KEY=abc123
+	set LRC_DATABASE_DEBUG=1
+	python lrc_database\manage.py runserver
+
 run_docker:
 	LRC_DATABASE_SECRET_KEY=abc123 docker compose up
 
@@ -40,9 +45,21 @@ reset_database:
 	./lrc_database/manage.py migrate
 	./lrc_database/manage.py bootstrapdatabase
 
+win_reset:
+	del lrc_database\main\migrations\*.py
+	type nul > lrc_database\main\migrations\__init__.py
+	del lrc_database\db.sqlite3
+	python lrc_database\manage.py makemigrations main
+	python lrc_database\manage.py migrate
+	python lrc_database\manage.py bootstrapdatabase
+
 migrate:
 	./lrc_database/manage.py makemigrations main
 	./lrc_database/manage.py migrate
+
+win_migrate:
+	python lrc_database\manage.py makemigrations main
+	python lrc_database\manage.py migrate
 
 install_git_hooks:
 	cp .git-hooks/* .git/hooks
