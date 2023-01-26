@@ -14,3 +14,7 @@ poetry.lock
 # Editors and tools
 **/.mypy_cache/
 **/.vscode/
+
+# Virtual Enviroment
+**/venv_lrc
+**/lrc_venv
